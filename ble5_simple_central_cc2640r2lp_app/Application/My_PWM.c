@@ -34,7 +34,7 @@ PWM_STATUS My_PWM_init(void)
     }
 
     PWM_start(gPWM0);                                      // start PWM with 0% duty cycle
-    PWM_setDuty(gPWM0, (PWM_DUTY_FRACTION_MAX * 0.001 / PWM_FRE));     //
+    PWM_setDuty(gPWM0, (PWM_DUTY_FRACTION_MAX * 0.4f));     //
 
     return 0;
 }

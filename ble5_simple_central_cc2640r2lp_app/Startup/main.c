@@ -122,7 +122,7 @@ Semaphore_Handle hTempSem;
 
 extern void AssertHandler(uint8 assertCause, uint8 assertSubcause);
 
-extern void PwmPeripheral_createTask(void); //PWM task
+extern void PwmCentral_createTask(void); //PWM task
 
 extern Display_Handle dispHandle;
 
@@ -196,7 +196,7 @@ int main()
   SimpleBLECentral_createTask();
 
   /* PWM peripheral task - Priority 3 */
-  PwmPeripheral_createTask();
+  PwmCentral_createTask();
 
   /* enable interrupts and start SYS/BIOS */
   BIOS_start();

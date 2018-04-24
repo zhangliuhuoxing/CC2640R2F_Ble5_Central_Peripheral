@@ -178,7 +178,7 @@
 #define DEFAULT_SVC_DISCOVERY_DELAY           1000
 
 // TRUE to filter discovery results on desired service UUID
-#define DEFAULT_DEV_DISC_BY_SVC_UUID          TRUE
+#define DEFAULT_DEV_DISC_BY_SVC_UUID          FALSE
 
 // Length of bd addr as a string
 #define B_ADDR_STR_LEN                        15
@@ -202,6 +202,11 @@
 #ifndef SBC_TASK_STACK_SIZE
 #define SBC_TASK_STACK_SIZE                   864
 #endif
+
+//My code
+//10ms
+#define PWM_TIMER_PERIOD                      10
+//My code
 
 // Application states
 enum
@@ -288,6 +293,8 @@ Char sbcTaskStack[SBC_TASK_STACK_SIZE];
 // My code
 Task_Struct pwmTask;
 Char pwmTaskStack[SBC_TASK_STACK_SIZE];
+
+static Clock_Struct PWMperiodicClock;
 // My code
 
 // GAP GATT Attributes
@@ -344,7 +351,8 @@ static void SimpleBLECentral_init(void);
 static void SimpleBLECentral_taskFxn(UArg a0, UArg a1);
 
 // My code
-static void PwmPeripheral_taskFxn(UArg a0, UArg a1);
+static void PwmCentral_taskFxn(UArg a0, UArg a1);
+static void PWMTimerHandler(UArg a0);
 // My code
 
 static void SimpleBLECentral_processGATTMsg(gattMsgEvent_t *pMsg);
@@ -505,7 +513,7 @@ void SimpleBLECentral_createTask(void)
  *
  * @return  none
  */
-void PwmPeripheral_createTask(void)
+void PwmCentral_createTask(void)
 {
   Task_Params taskParams;
 
@@ -515,25 +523,55 @@ void PwmPeripheral_createTask(void)
   taskParams.stackSize = SBC_TASK_STACK_SIZE;
   taskParams.priority = 3; //originally 3
 
-  Task_construct(&pwmTask, PwmPeripheral_taskFxn, &taskParams, NULL);
+  Task_construct(&pwmTask, PwmCentral_taskFxn, &taskParams, NULL);
 }
 
-static void PwmPeripheral_taskFxn(UArg a0, UArg a1)
+static void PwmCentral_taskFxn(UArg a0, UArg a1)
 {
     float PWM0Duty = 0.4f;    //40% ~ 80% (0.4 ~ 0.8) , FRE = 400hz
+    uint8_t PWMFlag = 0;
+
+    Util_constructClock(&PWMperiodicClock, PWMTimerHandler,
+                        3000, 10, false, hTempSem);
+    Util_startClock(&PWMperiodicClock);
+
     GUA_Led_Set(GUA_LED_NO_2, GUA_LED_MODE_ON);
     My_PWM_init();
 
+    Semaphore_pend(hTempSem, BIOS_WAIT_FOREVER);
+
+    Util_rescheduleClock(&PWMperiodicClock, 1);
+    Util_startClock(&PWMperiodicClock);
+
+    PWM0Duty = 0.0f;
     while(1)
     {
-        PWM_setDuty(gPWM0, (PWM_DUTY_FRACTION_MAX * PWM0Duty));
         //wait on semaphore
         Semaphore_pend(hTempSem, BIOS_WAIT_FOREVER);
+        Util_startClock(&PWMperiodicClock);
 
+        if(PWMFlag == 0x0)
+            PWM0Duty = PWM0Duty + 0.001f;
+        else if(PWMFlag == 0xff)
+            PWM0Duty = PWM0Duty - 0.001f;
 
+        if(PWM0Duty < 0.001 || PWM0Duty > 0.999)
+        {
+            PWMFlag = ~PWMFlag;
+        }
+//        if(PWM0Duty < 0.6f)
+//            PWM0Duty = PWM0Duty + 0.0001f;
+
+        PWM_setDuty(gPWM0, (PWM_DUTY_FRACTION_MAX * PWM0Duty));
+        GUA_Led_Set(GUA_LED_NO_2, GUA_LED_MODE_TOGGLE);
     }//end of outer while
 
 }//end of function
+
+static void PWMTimerHandler(UArg a0)
+{
+    Semaphore_post(a0);
+}
 
 /*********************************************************************
  * @fn      SimpleBLECentral_Init
