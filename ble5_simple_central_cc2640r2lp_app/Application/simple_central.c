@@ -54,6 +54,8 @@
 #include <ti/sysbios/knl/Clock.h>
 #include <ti/sysbios/knl/Event.h>
 #include <ti/sysbios/knl/Queue.h>
+#include <ti/sysbios/knl/Semaphore.h>
+#include <ti/sysbios/BIOS.h>
 #include <ti/display/Display.h>
 
 #if defined( USE_FPGA ) || defined( DEBUG_SW_TRACE )
@@ -76,6 +78,11 @@
 #include "simple_central.h"
 
 #include "ble_user_config.h"
+
+// My code
+#include "GUA_Led.h"
+#include "My_PWM.h"
+// My code
 
 /*********************************************************************
  * MACROS
@@ -253,6 +260,9 @@ Display_Handle dispHandle = NULL;
  * EXTERNAL VARIABLES
  */
 
+/* Related to semaphores */
+extern Semaphore_Handle hTempSem;
+
 /*********************************************************************
  * LOCAL VARIABLES
  */
@@ -274,6 +284,11 @@ static Queue_Handle appMsgQueue;
 // Task configuration
 Task_Struct sbcTask;
 Char sbcTaskStack[SBC_TASK_STACK_SIZE];
+
+// My code
+Task_Struct pwmTask;
+Char pwmTaskStack[SBC_TASK_STACK_SIZE];
+// My code
 
 // GAP GATT Attributes
 static const uint8_t attDeviceName[GAP_DEVICE_NAME_LEN] = "Simple Central";
@@ -327,6 +342,10 @@ static keyPressConnOpt_t keyPressConnOpt = DISCONNECT;
  */
 static void SimpleBLECentral_init(void);
 static void SimpleBLECentral_taskFxn(UArg a0, UArg a1);
+
+// My code
+static void PwmPeripheral_taskFxn(UArg a0, UArg a1);
+// My code
 
 static void SimpleBLECentral_processGATTMsg(gattMsgEvent_t *pMsg);
 static void SimpleBLECentral_handleKeys(uint8_t shift, uint8_t keys);
@@ -476,6 +495,45 @@ void SimpleBLECentral_createTask(void)
 
   Task_construct(&sbcTask, SimpleBLECentral_taskFxn, &taskParams, NULL);
 }
+
+/*********************************************************************
+ * @fn      PwmPeripheral_createTask
+ *
+ * @brief   Task creation function for the PWM Peripheral.
+ *
+ * @param   none
+ *
+ * @return  none
+ */
+void PwmPeripheral_createTask(void)
+{
+  Task_Params taskParams;
+
+  // Configure task
+  Task_Params_init(&taskParams);
+  taskParams.stack = pwmTaskStack;
+  taskParams.stackSize = SBC_TASK_STACK_SIZE;
+  taskParams.priority = 3; //originally 3
+
+  Task_construct(&pwmTask, PwmPeripheral_taskFxn, &taskParams, NULL);
+}
+
+static void PwmPeripheral_taskFxn(UArg a0, UArg a1)
+{
+    float PWM0Duty = 0.4f;    //40% ~ 80% (0.4 ~ 0.8) , FRE = 400hz
+    GUA_Led_Set(GUA_LED_NO_2, GUA_LED_MODE_ON);
+    My_PWM_init();
+
+    while(1)
+    {
+        PWM_setDuty(gPWM0, (PWM_DUTY_FRACTION_MAX * PWM0Duty));
+        //wait on semaphore
+        Semaphore_pend(hTempSem, BIOS_WAIT_FOREVER);
+
+
+    }//end of outer while
+
+}//end of function
 
 /*********************************************************************
  * @fn      SimpleBLECentral_Init

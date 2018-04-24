@@ -54,6 +54,7 @@
 #include <ti/drivers/power/PowerCC26XX.h>
 #include <ti/display/Display.h>
 #include <ti/sysbios/knl/Clock.h>
+#include <ti/sysbios/knl/Semaphore.h>
 #include <ti/sysbios/BIOS.h>
 
 #include <icall.h>
@@ -111,11 +112,17 @@ bleUserCfg_t user0Cfg = BLE_USER_CFG;
  * GLOBAL VARIABLES
  */
 
+/* Related to Semaphores */
+Semaphore_Struct Tempsem;
+Semaphore_Handle hTempSem;
+
 /*******************************************************************************
  * EXTERNS
  */
 
 extern void AssertHandler(uint8 assertCause, uint8 assertSubcause);
+
+extern void PwmPeripheral_createTask(void); //PWM task
 
 extern Display_Handle dispHandle;
 
@@ -178,8 +185,18 @@ int main()
   /* Kick off profile - Priority 3 */
   GAPCentralRole_createTask();
 
+  /* Semaphore for motor control thread */
+   Semaphore_Params sParams1;
+   Semaphore_Params_init(&sParams1);
+   sParams1.mode = Semaphore_Mode_BINARY;
+   Semaphore_construct(&Tempsem, 0, &sParams1);
+   hTempSem = Semaphore_handle(&Tempsem);
+
   /* Kick off application - Priority 1 */
   SimpleBLECentral_createTask();
+
+  /* PWM peripheral task - Priority 3 */
+  PwmPeripheral_createTask();
 
   /* enable interrupts and start SYS/BIOS */
   BIOS_start();
