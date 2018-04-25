@@ -210,8 +210,8 @@
 #define GATT_CLIENT_CFG_NOTIFY                  0x0001 //打开notify开关的数值
 #define GATT_CLIENT_CFG_INDICATE                0x0002 //打开indicate开关的数值
 
-#define GUA_CHAR4_Hdl                           0x35   //char4的句柄
-#define GUA_CHAR4_CCC_Hdl                       0x36   //char4的CCC的句柄
+#define GUA_CHAR4_Hdl                           0x29   //char4的句柄
+#define GUA_CHAR4_CCC_Hdl                       0x2A   //char4的CCC的句柄
 //My code
 
 // Application states
@@ -238,7 +238,7 @@ typedef enum {
   RSSI,                    // Toggle RSSI updates
   CONN_UPDATE,             // Send Connection Parameter Update
   SET_PHY,                 // Set PHY preference
-//  GET_NOTIFY,              // Get notify
+  GET_NOTIFY,              // Get notify
   DISCONNECT               // Disconnect
 } keyPressConnOpt_t;
 
@@ -293,6 +293,10 @@ static Clock_Struct startDiscClock;
 static Queue_Struct appMsg;
 static Queue_Handle appMsgQueue;
 
+// My code
+
+// My code
+
 // Task configuration
 Task_Struct sbcTask;
 Char sbcTaskStack[SBC_TASK_STACK_SIZE];
@@ -302,6 +306,8 @@ Task_Struct pwmTask;
 Char pwmTaskStack[SBC_TASK_STACK_SIZE];
 
 static Clock_Struct PWMperiodicClock;
+
+static uint8_t NotifyPackages[5] = {0};
 // My code
 
 // GAP GATT Attributes
@@ -536,41 +542,44 @@ void PwmCentral_createTask(void)
 static void PwmCentral_taskFxn(UArg a0, UArg a1)
 {
     float PWM0Duty = 0.4f;    //40% ~ 80% (0.4 ~ 0.8) , FRE = 400hz
-    uint8_t PWMFlag = 0;
+    uint8_t XORValue = 0;
+    uint16_t SpeedValue = 0;
 
-    Util_constructClock(&PWMperiodicClock, PWMTimerHandler,
-                        3000, 10, false, hTempSem);
-    Util_startClock(&PWMperiodicClock);
+//    Util_constructClock(&PWMperiodicClock, PWMTimerHandler,
+//                        3000, 10, false, hTempSem);
+//    Util_startClock(&PWMperiodicClock);
 
     GUA_Led_Set(GUA_LED_NO_2, GUA_LED_MODE_ON);
     My_PWM_init();
-
-    Semaphore_pend(hTempSem, BIOS_WAIT_FOREVER);
-
-    Util_rescheduleClock(&PWMperiodicClock, 1);
-    Util_startClock(&PWMperiodicClock);
 
     PWM0Duty = 0.0f;
     while(1)
     {
         //wait on semaphore
         Semaphore_pend(hTempSem, BIOS_WAIT_FOREVER);
-        Util_startClock(&PWMperiodicClock);
 
-        if(PWMFlag == 0x0)
-            PWM0Duty = PWM0Duty + 0.001f;
-        else if(PWMFlag == 0xff)
-            PWM0Duty = PWM0Duty - 0.001f;
-
-        if(PWM0Duty < 0.001 || PWM0Duty > 0.999)
+        if(NotifyPackages[0] == 0xa5 && NotifyPackages[1] == 0x01)
         {
-            PWMFlag = ~PWMFlag;
-        }
-//        if(PWM0Duty < 0.6f)
-//            PWM0Duty = PWM0Duty + 0.0001f;
+            XORValue = 0;
+            for(uint8_t i = 0; i < 4; i++)
+            {
+                XORValue ^= NotifyPackages[i];
+            }
 
-        PWM_setDuty(gPWM0, (PWM_DUTY_FRACTION_MAX * PWM0Duty));
-        GUA_Led_Set(GUA_LED_NO_2, GUA_LED_MODE_TOGGLE);
+            if(XORValue == NotifyPackages[4])
+            {
+                SpeedValue = *(uint16_t *)(&NotifyPackages[2]);
+                PWM0Duty = SpeedValue * 1.0 / 10000;
+
+                PWM0Duty = 0.4 + 0.4 * PWM0Duty;
+
+                if(PWM0Duty > 0.4 && PWM0Duty < 0.8)
+                {
+                    PWM_setDuty(gPWM0, (PWM_DUTY_FRACTION_MAX * PWM0Duty));
+                }
+                GUA_Led_Set(GUA_LED_NO_2, GUA_LED_MODE_TOGGLE);
+            }
+        }
     }//end of outer while
 
 }//end of function
@@ -1166,9 +1175,9 @@ static void SimpleBLECentral_handleKeys(uint8_t shift, uint8_t keys)
           Display_print0(dispHandle, 5, 0, "Set PHY Preference ->");
           break;
 
-//        case GET_NOTIFY:
-//            Display_print0(dispHandle, 5, 0, "Get Notify ->");
-//            break;
+        case GET_NOTIFY:
+            Display_print0(dispHandle, 5, 0, "Get Notify ->");
+            break;
 
         case DISCONNECT:
           Display_print0(dispHandle, 5, 0, "Disconnect ->");
@@ -1341,31 +1350,31 @@ static void SimpleBLECentral_handleKeys(uint8_t shift, uint8_t keys)
           }
           break;
 
-//        case GET_NOTIFY:
-//            if (charHdl != 0 &&
-//                procedureInProgress == FALSE)
-//            {
-//                Display_clearLine(dispHandle, 4);
-//                attWriteReq_t writeReq;
-//                writeReq.pValue = GATT_bm_alloc(connHandle, ATT_WRITE_REQ, 2, NULL);
-//                if (writeReq.pValue != NULL)
-//                {
-//                    writeReq.len = 2;
-//                    writeReq.pValue[0] = LO_UINT16(GATT_CLIENT_CFG_NOTIFY);
-//                    writeReq.pValue[1] = HI_UINT16(GATT_CLIENT_CFG_NOTIFY);
-//                    writeReq.sig = 0;
-//                    writeReq.cmd = 0;
-//
-//                    writeReq.handle = GUA_CHAR4_CCC_Hdl;
-//
-//                    // Send the read request
-//                    if (GATT_WriteCharValue(connHandle, &writeReq, selfEntity) != SUCCESS)
-//                    {
-//                        GATT_bm_free((gattMsg_t *)&writeReq, ATT_WRITE_REQ);
-//                    }
-//                }
-//            }
-//            break;
+        case GET_NOTIFY:
+            if (charHdl != 0 &&
+                procedureInProgress == FALSE)
+            {
+                Display_clearLine(dispHandle, 4);
+                attWriteReq_t writeReq;
+                writeReq.pValue = GATT_bm_alloc(connHandle, ATT_WRITE_REQ, 2, NULL);
+                if (writeReq.pValue != NULL)
+                {
+                    writeReq.len = 2;
+                    writeReq.pValue[0] = LO_UINT16(GATT_CLIENT_CFG_NOTIFY);
+                    writeReq.pValue[1] = HI_UINT16(GATT_CLIENT_CFG_NOTIFY);
+                    writeReq.sig = 0;
+                    writeReq.cmd = 0;
+
+                    writeReq.handle = GUA_CHAR4_CCC_Hdl;
+
+                    // Send the read request
+                    if (GATT_WriteCharValue(connHandle, &writeReq, selfEntity) != SUCCESS)
+                    {
+                        GATT_bm_free((gattMsg_t *)&writeReq, ATT_WRITE_REQ);
+                    }
+                }
+            }
+            break;
 
         case DISCONNECT:
           state = BLE_STATE_DISCONNECTING;
@@ -1466,15 +1475,21 @@ static void SimpleBLECentral_processGATTMsg(gattMsgEvent_t *pMsg)
     }
 
     //My code
-//    else if ( ( pMsg->method == ATT_HANDLE_VALUE_NOTI ) )   //通知
-//    {
-//      if( pMsg->msg.handleValueNoti.handle == GUA_CHAR4_Hdl)     //CHAR6的通知  串口打印
-//      {
-//          char str[32] = {0};
-//          memcpy(str, pMsg->msg.handleValueNoti.pValue, pMsg->msg.handleValueNoti.len );
-//          Display_print1(dispHandle, 8, 0, "Notify: %d", pMsg->msg.handleValueNoti.pValue[0]);
-//      }
-//    }
+    else if ( ( pMsg->method == ATT_HANDLE_VALUE_NOTI ) )   //通知
+    {
+      if( pMsg->msg.handleValueNoti.handle == GUA_CHAR4_Hdl)     //CHAR6的通知  串口打印
+      {
+          memcpy(NotifyPackages, pMsg->msg.handleValueNoti.pValue, pMsg->msg.handleValueNoti.len );
+          Semaphore_post(hTempSem);
+
+          Display_print1(dispHandle, 15, 0, "Notify Len: %d", pMsg->msg.handleValueNoti.len);
+          Display_print1(dispHandle, 16, 0, "Notify1: %d", pMsg->msg.handleValueNoti.pValue[0]);
+          Display_print1(dispHandle, 17, 0, "Notify2: %d", pMsg->msg.handleValueNoti.pValue[1]);
+          Display_print1(dispHandle, 18, 0, "Notify3: %d", pMsg->msg.handleValueNoti.pValue[2]);
+          Display_print1(dispHandle, 19, 0, "Notify4: %d", pMsg->msg.handleValueNoti.pValue[3]);
+          Display_print1(dispHandle, 20, 0, "Notify5: %d", pMsg->msg.handleValueNoti.pValue[4]);
+      }
+    }
     //My code
   } // else - in case a GATT message came after a connection has dropped, ignore it.
 
