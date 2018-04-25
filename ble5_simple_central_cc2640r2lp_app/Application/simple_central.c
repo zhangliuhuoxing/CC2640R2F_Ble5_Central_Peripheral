@@ -178,7 +178,7 @@
 #define DEFAULT_SVC_DISCOVERY_DELAY           1000
 
 // TRUE to filter discovery results on desired service UUID
-#define DEFAULT_DEV_DISC_BY_SVC_UUID          FALSE
+#define DEFAULT_DEV_DISC_BY_SVC_UUID          TRUE
 
 // Length of bd addr as a string
 #define B_ADDR_STR_LEN                        15
@@ -206,6 +206,12 @@
 //My code
 //10ms
 #define PWM_TIMER_PERIOD                      10
+
+#define GATT_CLIENT_CFG_NOTIFY                  0x0001 //打开notify开关的数值
+#define GATT_CLIENT_CFG_INDICATE                0x0002 //打开indicate开关的数值
+
+#define GUA_CHAR4_Hdl                           0x35   //char4的句柄
+#define GUA_CHAR4_CCC_Hdl                       0x36   //char4的CCC的句柄
 //My code
 
 // Application states
@@ -232,6 +238,7 @@ typedef enum {
   RSSI,                    // Toggle RSSI updates
   CONN_UPDATE,             // Send Connection Parameter Update
   SET_PHY,                 // Set PHY preference
+//  GET_NOTIFY,              // Get notify
   DISCONNECT               // Disconnect
 } keyPressConnOpt_t;
 
@@ -1159,6 +1166,10 @@ static void SimpleBLECentral_handleKeys(uint8_t shift, uint8_t keys)
           Display_print0(dispHandle, 5, 0, "Set PHY Preference ->");
           break;
 
+//        case GET_NOTIFY:
+//            Display_print0(dispHandle, 5, 0, "Get Notify ->");
+//            break;
+
         case DISCONNECT:
           Display_print0(dispHandle, 5, 0, "Disconnect ->");
           break;
@@ -1228,32 +1239,32 @@ static void SimpleBLECentral_handleKeys(uint8_t shift, uint8_t keys)
             uint8_t status;
 
             // Do a read or write as long as no other read or write is in progress
-            if (doWrite)
-            {
-              // Do a write
-              attWriteReq_t req;
-
-              req.pValue = GATT_bm_alloc(connHandle, ATT_WRITE_REQ, 1, NULL);
-              if ( req.pValue != NULL )
-              {
-                req.handle = charHdl;
-                req.len = 1;
-                req.pValue[0] = charVal;
-                req.sig = 0;
-                req.cmd = 0;
-
-                status = GATT_WriteCharValue(connHandle, &req, selfEntity);
-                if ( status != SUCCESS )
-                {
-                  GATT_bm_free((gattMsg_t *)&req, ATT_WRITE_REQ);
-                }
-              }
-              else
-              {
-                status = bleMemAllocError;
-              }
-            }
-            else
+//            if (doWrite)
+//            {
+//              // Do a write
+//              attWriteReq_t req;
+//
+//              req.pValue = GATT_bm_alloc(connHandle, ATT_WRITE_REQ, 1, NULL);
+//              if ( req.pValue != NULL )
+//              {
+//                req.handle = charHdl;
+//                req.len = 1;
+//                req.pValue[0] = charVal;
+//                req.sig = 0;
+//                req.cmd = 0;
+//
+//                status = GATT_WriteCharValue(connHandle, &req, selfEntity);
+//                if ( status != SUCCESS )
+//                {
+//                  GATT_bm_free((gattMsg_t *)&req, ATT_WRITE_REQ);
+//                }
+//              }
+//              else
+//              {
+//                status = bleMemAllocError;
+//              }
+//            }
+//            else
             {
               // Do a read
               attReadReq_t req;
@@ -1265,7 +1276,7 @@ static void SimpleBLECentral_handleKeys(uint8_t shift, uint8_t keys)
             if (status == SUCCESS)
             {
               procedureInProgress = TRUE;
-              doWrite = !doWrite;
+//              doWrite = !doWrite;
             }
           }
           break;
@@ -1330,6 +1341,32 @@ static void SimpleBLECentral_handleKeys(uint8_t shift, uint8_t keys)
           }
           break;
 
+//        case GET_NOTIFY:
+//            if (charHdl != 0 &&
+//                procedureInProgress == FALSE)
+//            {
+//                Display_clearLine(dispHandle, 4);
+//                attWriteReq_t writeReq;
+//                writeReq.pValue = GATT_bm_alloc(connHandle, ATT_WRITE_REQ, 2, NULL);
+//                if (writeReq.pValue != NULL)
+//                {
+//                    writeReq.len = 2;
+//                    writeReq.pValue[0] = LO_UINT16(GATT_CLIENT_CFG_NOTIFY);
+//                    writeReq.pValue[1] = HI_UINT16(GATT_CLIENT_CFG_NOTIFY);
+//                    writeReq.sig = 0;
+//                    writeReq.cmd = 0;
+//
+//                    writeReq.handle = GUA_CHAR4_CCC_Hdl;
+//
+//                    // Send the read request
+//                    if (GATT_WriteCharValue(connHandle, &writeReq, selfEntity) != SUCCESS)
+//                    {
+//                        GATT_bm_free((gattMsg_t *)&writeReq, ATT_WRITE_REQ);
+//                    }
+//                }
+//            }
+//            break;
+
         case DISCONNECT:
           state = BLE_STATE_DISCONNECTING;
 
@@ -1381,7 +1418,12 @@ static void SimpleBLECentral_processGATTMsg(gattMsgEvent_t *pMsg)
       else
       {
         // After a successful read, display the read value
-        Display_print1(dispHandle, 4, 0, "Read rsp: %d", pMsg->msg.readRsp.pValue[0]);
+        Display_print1(dispHandle, 8, 0, "Len: %d", pMsg->msg.readRsp.len);
+        Display_print1(dispHandle, 9, 0, "Read rsp1: %d", pMsg->msg.readRsp.pValue[0]);
+        Display_print1(dispHandle, 10, 0, "Read rsp2: %d", pMsg->msg.readRsp.pValue[1]);
+        Display_print1(dispHandle, 11, 0, "Read rsp3: %d", pMsg->msg.readRsp.pValue[2]);
+        Display_print1(dispHandle, 12, 0, "Read rsp4: %d", pMsg->msg.readRsp.pValue[3]);
+        Display_print1(dispHandle, 13, 0, "Read rsp5: %d", pMsg->msg.readRsp.pValue[4]);
       }
 
       procedureInProgress = FALSE;
@@ -1422,6 +1464,18 @@ static void SimpleBLECentral_processGATTMsg(gattMsgEvent_t *pMsg)
     {
       SimpleBLECentral_processGATTDiscEvent(pMsg);
     }
+
+    //My code
+//    else if ( ( pMsg->method == ATT_HANDLE_VALUE_NOTI ) )   //通知
+//    {
+//      if( pMsg->msg.handleValueNoti.handle == GUA_CHAR4_Hdl)     //CHAR6的通知  串口打印
+//      {
+//          char str[32] = {0};
+//          memcpy(str, pMsg->msg.handleValueNoti.pValue, pMsg->msg.handleValueNoti.len );
+//          Display_print1(dispHandle, 8, 0, "Notify: %d", pMsg->msg.handleValueNoti.pValue[0]);
+//      }
+//    }
+    //My code
   } // else - in case a GATT message came after a connection has dropped, ignore it.
 
   // Needed only for ATT Protocol messages
@@ -1787,6 +1841,7 @@ static void SimpleBLECentral_processGATTDiscEvent(gattMsgEvent_t *pMsg)
     {
       charHdl = BUILD_UINT16(pMsg->msg.readByTypeRsp.pDataList[0],
                              pMsg->msg.readByTypeRsp.pDataList[1]);
+
 
       Display_print0(dispHandle, 2, 0, "Simple Svc Found");
       procedureInProgress = FALSE;
