@@ -235,10 +235,10 @@ enum
 // Key states for connections
 typedef enum {
   GATT_RW,                 // Perform GATT Read/Write
+  GET_NOTIFY,              // Get notify
   RSSI,                    // Toggle RSSI updates
   CONN_UPDATE,             // Send Connection Parameter Update
   SET_PHY,                 // Set PHY preference
-  GET_NOTIFY,              // Get notify
   DISCONNECT               // Disconnect
 } keyPressConnOpt_t;
 
@@ -366,6 +366,7 @@ static void SimpleBLECentral_taskFxn(UArg a0, UArg a1);
 // My code
 static void PwmCentral_taskFxn(UArg a0, UArg a1);
 static void PWMTimerHandler(UArg a0);
+static void SimpleBLECentral_AutoConnect(uint8_t shift, uint8_t keys);
 // My code
 
 static void SimpleBLECentral_processGATTMsg(gattMsgEvent_t *pMsg);
@@ -545,10 +546,6 @@ static void PwmCentral_taskFxn(UArg a0, UArg a1)
     uint8_t XORValue = 0;
     uint16_t SpeedValue = 0;
 
-//    Util_constructClock(&PWMperiodicClock, PWMTimerHandler,
-//                        3000, 10, false, hTempSem);
-//    Util_startClock(&PWMperiodicClock);
-
     GUA_Led_Set(GUA_LED_NO_2, GUA_LED_MODE_ON);
     My_PWM_init();
 
@@ -577,7 +574,6 @@ static void PwmCentral_taskFxn(UArg a0, UArg a1)
                 {
                     PWM_setDuty(gPWM0, (PWM_DUTY_FRACTION_MAX * PWM0Duty));
                 }
-                GUA_Led_Set(GUA_LED_NO_2, GUA_LED_MODE_TOGGLE);
             }
         }
     }//end of outer while
@@ -638,7 +634,7 @@ static void SimpleBLECentral_init(void)
   Util_constructClock(&startDiscClock, SimpleBLECentral_startDiscHandler,
                       DEFAULT_SVC_DISCOVERY_DELAY, 0, false, 0);
 
-  Board_initKeys(SimpleBLECentral_keyChangeHandler);
+//  Board_initKeys(SimpleBLECentral_keyChangeHandler);
 
   dispHandle = Display_open(SBC_DISPLAY_TYPE, NULL);
 
@@ -761,6 +757,10 @@ static void SimpleBLECentral_taskFxn(UArg a0, UArg a1)
 {
   // Initialize application
   SimpleBLECentral_init();
+
+  Util_constructClock(&PWMperiodicClock, SimpleBLECentral_keyChangeHandler,
+                      5000, 0, false, hTempSem);
+  Util_startClock(&PWMperiodicClock);
 
   // Application main loop
   for (;;)
@@ -914,7 +914,8 @@ static void SimpleBLECentral_processAppMsg(sbcEvt_t *pMsg)
       break;
 
     case SBC_KEY_CHANGE_EVT:
-      SimpleBLECentral_handleKeys(0, pMsg->hdr.state);
+//      SimpleBLECentral_handleKeys(0, pMsg->hdr.state);
+      SimpleBLECentral_AutoConnect(0, pMsg->hdr.state);
       break;
 
     case SBC_RSSI_READ_EVT:
@@ -1056,7 +1057,8 @@ static void SimpleBLECentral_processRoleEvent(gapCentralRoleEvent_t *pEvent)
           Display_print0(dispHandle, 3, 0, Util_convertBdAddr2Str(pEvent->linkCmpl.devAddr));
 
           // Display the initial options for a Right key press.
-          SimpleBLECentral_handleKeys(0, KEY_LEFT);
+//          SimpleBLECentral_handleKeys(0, KEY_LEFT);
+          SimpleBLECentral_AutoConnect(0, KEY_LEFT);
         }
         else
         {
@@ -1398,6 +1400,272 @@ static void SimpleBLECentral_handleKeys(uint8_t shift, uint8_t keys)
   }
 }
 
+static void SimpleBLECentral_AutoConnect(uint8_t shift, uint8_t keys)
+{
+    (void)shift;  // Intentionally unreferenced parameter
+
+    static uint8_t phyIndex = NUM_PHY - 1;
+
+    if (keys & KEY_LEFT)
+    {
+      // If not connected
+      if (state == BLE_STATE_IDLE)
+      {
+        // If not currently scanning
+        if (!scanningStarted)
+        {
+          // Increment index of current result.
+          scanIdx++;
+
+          // If there are no scanned devices
+          if (scanIdx >= scanRes)
+          {
+            // Prompt the user to begin scanning again.
+            scanIdx = -1;
+            Display_print0(dispHandle, 2, 0, "");
+            Display_print0(dispHandle, 3, 0, "");
+            Display_print0(dispHandle, 5, 0, "Discover ->");
+          }
+          else
+          {
+            // Display the indexed scanned device.
+            Display_print1(dispHandle, 2, 0, "Device %d", (scanIdx + 1));
+            Display_print0(dispHandle, 3, 0, Util_convertBdAddr2Str(devList[scanIdx].addr));
+            Display_print0(dispHandle, 5, 0, "Connect ->");
+            Display_print0(dispHandle, 6, 0, "<- Next Option");
+            Util_rescheduleClock(&PWMperiodicClock, 1000);
+            Util_startClock(&PWMperiodicClock);
+          }
+        }
+      }
+      else if (state == BLE_STATE_CONNECTED)
+      {
+        keyPressConnOpt = (keyPressConnOpt == DISCONNECT) ? GATT_RW :
+                                            (keyPressConnOpt_t) (keyPressConnOpt + 1);
+
+        switch (keyPressConnOpt)
+        {
+          case GATT_RW:
+            Display_print0(dispHandle, 5, 0, "GATT Read/Write ->");
+            Util_rescheduleClock(&PWMperiodicClock, 5000);
+            Util_startClock(&PWMperiodicClock);
+            break;
+
+          case RSSI:
+            Display_print0(dispHandle, 5, 0, "Toggle Read RSSI ->");
+            break;
+
+          case CONN_UPDATE:
+            Display_print0(dispHandle, 5, 0, "Connection Update ->");
+            break;
+
+          case SET_PHY:
+            Display_print0(dispHandle, 5, 0, "Set PHY Preference ->");
+            break;
+
+          case GET_NOTIFY:
+              Display_print0(dispHandle, 5, 0, "Get Notify ->");
+              break;
+
+          case DISCONNECT:
+            Display_print0(dispHandle, 5, 0, "Disconnect ->");
+            break;
+
+          default:
+            break;
+        }
+
+        Display_print0(dispHandle, 6, 0, "<- Next Option");
+      }
+
+      return;
+    }
+
+    if (keys & KEY_RIGHT)
+    {
+      if (state == BLE_STATE_IDLE)
+      {
+        if (scanIdx == -1)
+        {
+          if (!scanningStarted)
+          {
+            scanningStarted = TRUE;
+            scanRes = 0;
+
+            Display_print0(dispHandle, 2, 0, "Discovering...");
+            Display_print0(dispHandle, 3, 0, "");
+            Display_print0(dispHandle, 4, 0, "");
+            Display_print0(dispHandle, 5, 0, "");
+            Display_print0(dispHandle, 6, 0, "");
+
+            GAPCentralRole_StartDiscovery(DEFAULT_DISCOVERY_MODE,
+                                          DEFAULT_DISCOVERY_ACTIVE_SCAN,
+                                          DEFAULT_DISCOVERY_WHITE_LIST);
+            Util_rescheduleClock(&PWMperiodicClock, 6000);
+            Util_startClock(&PWMperiodicClock);
+          }
+        }
+        // Connect if there is a scan result
+        else
+        {
+          // connect to current device in scan result
+          uint8_t *peerAddr = devList[scanIdx].addr;
+          uint8_t addrType = devList[scanIdx].addrType;
+
+          state = BLE_STATE_CONNECTING;
+
+          GAPCentralRole_EstablishLink(DEFAULT_LINK_HIGH_DUTY_CYCLE,
+                                       DEFAULT_LINK_WHITE_LIST,
+                                       addrType, peerAddr);
+
+          Display_print0(dispHandle, 2, 0, "Connecting");
+          Display_print0(dispHandle, 3, 0, Util_convertBdAddr2Str(peerAddr));
+          Display_clearLine(dispHandle, 4);
+
+          // Forget the scan results.
+          scanRes = 0;
+          scanIdx = -1;
+
+          Util_rescheduleClock(&PWMperiodicClock, 1000);
+          Util_startClock(&PWMperiodicClock);
+        }
+      }
+      else if (state == BLE_STATE_CONNECTED)
+      {
+        switch (keyPressConnOpt)
+        {
+          case GATT_RW:
+            if (charHdl != 0 &&
+                procedureInProgress == FALSE)
+            {
+              uint8_t status;
+              {
+                // Do a read
+                attReadReq_t req;
+
+                req.handle = charHdl;
+                status = GATT_ReadCharValue(connHandle, &req, selfEntity);
+              }
+
+              if (status == SUCCESS)
+              {
+                procedureInProgress = TRUE;
+  //              doWrite = !doWrite;
+              }
+            }
+            break;
+
+          case RSSI:
+            // Start or cancel RSSI polling
+            if (SimpleBLECentral_RssiFind(connHandle) == NULL)
+            {
+              SimpleBLECentral_StartRssi(connHandle, DEFAULT_RSSI_PERIOD);
+            }
+            else
+            {
+              SimpleBLECentral_CancelRssi(connHandle);
+
+              Display_print0(dispHandle, 4, 0, "RSSI Cancelled");
+            }
+            break;
+
+          case CONN_UPDATE:
+             // Connection update
+            GAPCentralRole_UpdateLink(connHandle,
+                                      DEFAULT_UPDATE_MIN_CONN_INTERVAL,
+                                      DEFAULT_UPDATE_MAX_CONN_INTERVAL,
+                                      DEFAULT_UPDATE_SLAVE_LATENCY,
+                                      DEFAULT_UPDATE_CONN_TIMEOUT);
+            break;
+
+          case SET_PHY:
+            if (linkDB_Up(connHandle))
+            {
+              static uint8_t* phyName[] = {
+                "1 Mbps", "2 Mbps", "1 & 2 Mbps",
+
+    // Note: BLE_V50_FEATURES is always defined and long range phy (PHY_LR_CFG) is
+    //       defined in build_config.opt
+    #if (BLE_V50_FEATURES & PHY_LR_CFG)
+                "Coded:S2", "1 & 2 Mbps, & Coded:S2",
+    #endif  // PHY_LR_CFG
+              };
+              static uint8_t phy[] = {
+                HCI_PHY_1_MBPS, HCI_PHY_2_MBPS, HCI_PHY_1_MBPS | HCI_PHY_2_MBPS,
+
+    // Note: BLE_V50_FEATURES is always defined and long range phy (PHY_LR_CFG) is
+    //       defined in build_config.opt
+    // To use the long range phy, HCI_PHY_CODED needs to be included
+    #if (BLE_V50_FEATURES & PHY_LR_CFG)
+                HCI_PHY_CODED, HCI_PHY_1_MBPS | HCI_PHY_2_MBPS | HCI_PHY_CODED,
+    #endif  // PHY_LR_CFG
+              };
+
+              // Select different phy. 1M -> 2M -> 1&2M -> 1M -> 2M -> 1&2M -> ...
+              phyIndex = (phyIndex == NUM_PHY - 1) ? 0 : (phyIndex + 1);
+
+              Display_print1(dispHandle, 2, 0, "PHY preference: %s",
+                             phyName[phyIndex]);
+
+              Display_clearLine(dispHandle, 3);
+
+              // Set Phy Preference on the current connection. Apply the same value
+              // for RX and TX.
+              HCI_LE_SetPhyCmd(connHandle, 0, phy[phyIndex], phy[phyIndex], 0);
+            }
+            break;
+
+          case GET_NOTIFY:
+              Display_print0(dispHandle, 9, 0, "aaaaaa");
+              if (charHdl != 0 &&
+                  procedureInProgress == FALSE)
+              {
+                  Display_clearLine(dispHandle, 4);
+                  attWriteReq_t writeReq;
+                  writeReq.pValue = GATT_bm_alloc(connHandle, ATT_WRITE_REQ, 2, NULL);
+                  if (writeReq.pValue != NULL)
+                  {
+                      writeReq.len = 2;
+                      writeReq.pValue[0] = LO_UINT16(GATT_CLIENT_CFG_NOTIFY);
+                      writeReq.pValue[1] = HI_UINT16(GATT_CLIENT_CFG_NOTIFY);
+                      writeReq.sig = 0;
+                      writeReq.cmd = 0;
+
+                      writeReq.handle = GUA_CHAR4_CCC_Hdl;
+                      Display_print0(dispHandle, 9, 0, "bbbbbb");
+
+                      // Send the read request
+                      if (GATT_WriteCharValue(connHandle, &writeReq, selfEntity) != SUCCESS)
+                      {
+                          Display_print0(dispHandle, 9, 0, "cccccc");
+                          GATT_bm_free((gattMsg_t *)&writeReq, ATT_WRITE_REQ);
+                      }
+                  }
+              }
+              break;
+
+          case DISCONNECT:
+            state = BLE_STATE_DISCONNECTING;
+
+            GAPCentralRole_TerminateLink(connHandle);
+
+            Display_print0(dispHandle, 2, 0, "Disconnecting");
+            Display_print0(dispHandle, 3, 0, "");
+            Display_print0(dispHandle, 4, 0, "");
+            Display_print0(dispHandle, 5, 0, "");
+
+            keyPressConnOpt = GATT_RW;
+            break;
+
+          default:
+            break;
+        }
+      }
+
+      return;
+    }
+}
+
 /*********************************************************************
  * @fn      SimpleBLECentral_processGATTMsg
  *
@@ -1477,17 +1745,21 @@ static void SimpleBLECentral_processGATTMsg(gattMsgEvent_t *pMsg)
     //My code
     else if ( ( pMsg->method == ATT_HANDLE_VALUE_NOTI ) )   //通知
     {
-      if( pMsg->msg.handleValueNoti.handle == GUA_CHAR4_Hdl)     //CHAR6的通知  串口打印
+      if( pMsg->msg.handleValueNoti.handle == GUA_CHAR4_Hdl)     //CHAR4的通知  串口打印
       {
           memcpy(NotifyPackages, pMsg->msg.handleValueNoti.pValue, pMsg->msg.handleValueNoti.len );
           Semaphore_post(hTempSem);
+          GUA_Led_Set(GUA_LED_NO_2, GUA_LED_MODE_TOGGLE);
 
-          Display_print1(dispHandle, 15, 0, "Notify Len: %d", pMsg->msg.handleValueNoti.len);
-          Display_print1(dispHandle, 16, 0, "Notify1: %d", pMsg->msg.handleValueNoti.pValue[0]);
-          Display_print1(dispHandle, 17, 0, "Notify2: %d", pMsg->msg.handleValueNoti.pValue[1]);
-          Display_print1(dispHandle, 18, 0, "Notify3: %d", pMsg->msg.handleValueNoti.pValue[2]);
-          Display_print1(dispHandle, 19, 0, "Notify4: %d", pMsg->msg.handleValueNoti.pValue[3]);
-          Display_print1(dispHandle, 20, 0, "Notify5: %d", pMsg->msg.handleValueNoti.pValue[4]);
+          static uint32_t test_count = 0;
+          Display_print1(dispHandle, 15, 0, "Count: %d", test_count++);
+
+//          Display_print1(dispHandle, 15, 0, "Notify Len: %d", pMsg->msg.handleValueNoti.len);
+//          Display_print1(dispHandle, 16, 0, "Notify1: %d", pMsg->msg.handleValueNoti.pValue[0]);
+//          Display_print1(dispHandle, 17, 0, "Notify2: %d", pMsg->msg.handleValueNoti.pValue[1]);
+//          Display_print1(dispHandle, 18, 0, "Notify3: %d", pMsg->msg.handleValueNoti.pValue[2]);
+//          Display_print1(dispHandle, 19, 0, "Notify4: %d", pMsg->msg.handleValueNoti.pValue[3]);
+//          Display_print1(dispHandle, 20, 0, "Notify5: %d", pMsg->msg.handleValueNoti.pValue[4]);
       }
     }
     //My code
@@ -2055,7 +2327,33 @@ void SimpleBLECentral_startDiscHandler(UArg a0)
  */
 void SimpleBLECentral_keyChangeHandler(uint8 keys)
 {
-  SimpleBLECentral_enqueueMsg(SBC_KEY_CHANGE_EVT, keys, NULL);
+  static uint8_t KeyCount = 0;
+  uint16_t KeyValue = 0;
+
+  if(KeyCount == 0)
+  {
+      KeyValue = KEY_RIGHT;   //discover
+  }
+  else if(KeyCount == 1)
+  {
+      KeyValue = KEY_LEFT;    //select
+  }
+  else if(KeyCount == 2)
+  {
+      KeyValue = KEY_RIGHT;   //connect
+  }
+  else if(KeyCount == 3)
+  {
+      KeyValue = KEY_LEFT;    //select
+  }
+  else if(KeyCount == 4)
+  {
+      KeyValue = KEY_RIGHT;   // open CCC (enable notify)
+  }
+
+  KeyCount++;
+
+  SimpleBLECentral_enqueueMsg(SBC_KEY_CHANGE_EVT, KeyValue, NULL);
 }
 
 /*********************************************************************
