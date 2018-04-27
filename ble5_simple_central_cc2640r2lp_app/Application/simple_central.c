@@ -273,7 +273,6 @@ Display_Handle dispHandle = NULL;
  */
 
 /* Related to semaphores */
-extern Semaphore_Handle hTempSem;
 
 /*********************************************************************
  * LOCAL VARIABLES
@@ -364,8 +363,6 @@ static void SimpleBLECentral_init(void);
 static void SimpleBLECentral_taskFxn(UArg a0, UArg a1);
 
 // My code
-static void PwmCentral_taskFxn(UArg a0, UArg a1);
-static void PWMTimerHandler(UArg a0);
 static void SimpleBLECentral_AutoConnect(uint8_t shift, uint8_t keys);
 // My code
 
@@ -515,72 +512,6 @@ void SimpleBLECentral_createTask(void)
   taskParams.priority = SBC_TASK_PRIORITY;
 
   Task_construct(&sbcTask, SimpleBLECentral_taskFxn, &taskParams, NULL);
-}
-
-/*********************************************************************
- * @fn      PwmPeripheral_createTask
- *
- * @brief   Task creation function for the PWM Peripheral.
- *
- * @param   none
- *
- * @return  none
- */
-void PwmCentral_createTask(void)
-{
-  Task_Params taskParams;
-
-  // Configure task
-  Task_Params_init(&taskParams);
-  taskParams.stack = pwmTaskStack;
-  taskParams.stackSize = SBC_TASK_STACK_SIZE;
-  taskParams.priority = 3; //originally 3
-
-  Task_construct(&pwmTask, PwmCentral_taskFxn, &taskParams, NULL);
-}
-
-static void PwmCentral_taskFxn(UArg a0, UArg a1)
-{
-//    float PWM0Duty = 0.4f;    //40% ~ 80% (0.4 ~ 0.8) , FRE = 400hz
-//    uint8_t XORValue = 0;
-//    uint16_t SpeedValue = 0;
-//
-//    My_PWM_init();
-//
-//    PWM0Duty = 0.0f;
-//    while(1)
-//    {
-//        //wait on semaphore
-//        Semaphore_pend(hTempSem, BIOS_WAIT_FOREVER);
-//
-//        if(NotifyPackages[0] == 0xa5 && NotifyPackages[1] == 0x01)
-//        {
-//            XORValue = 0;
-//            for(uint8_t i = 0; i < 4; i++)
-//            {
-//                XORValue ^= NotifyPackages[i];
-//            }
-//
-//            if(XORValue == NotifyPackages[4])
-//            {
-//                SpeedValue = *(uint16_t *)(&NotifyPackages[2]);
-//                PWM0Duty = SpeedValue * 1.0 / 10000;
-//
-//                PWM0Duty = 0.4 + 0.4 * PWM0Duty;
-//
-//                if(PWM0Duty > 0.4 && PWM0Duty < 0.8)
-//                {
-//                    PWM_setDuty(gPWM0, (PWM_DUTY_FRACTION_MAX * PWM0Duty));
-//                }
-//            }
-//        }
-//    }//end of outer while
-
-}//end of function
-
-static void PWMTimerHandler(UArg a0)
-{
-    Semaphore_post(a0);
 }
 
 /*********************************************************************
@@ -745,9 +676,8 @@ static void SimpleBLECentral_init(void)
   My_PWM_init();
 
   Util_constructClock(&PWMperiodicClock, SimpleBLECentral_keyChangeHandler,
-                      500, 0, false, hTempSem);
+                      500, 0, false, 0);
   Util_startClock(&PWMperiodicClock);
-
   // My code
 }
 
@@ -1453,18 +1383,18 @@ static void SimpleBLECentral_processGATTMsg(gattMsgEvent_t *pMsg)
       if( pMsg->msg.handleValueNoti.handle == GUA_CHAR4_Hdl)     //CHAR4's notify
       {
           uint8_t NotifyPackages[5] = {0};
-          float PWM0Duty = 0.4f;    //40% ~ 80% (0.4 ~ 0.8) , FRE = 400hz
+          float PWM0Duty = PWM_MIX_DUTY;    //40% ~ 80% (0.4 ~ 0.8) , FRE = 400hz
           uint8_t XORValue = 0;
           uint16_t SpeedValue = 0;
 
-          //复制通知数据
-          memcpy(NotifyPackages, pMsg->msg.handleValueNoti.pValue, pMsg->msg.handleValueNoti.len );
+          //Copy notify date
+          memcpy(NotifyPackages, pMsg->msg.handleValueNoti.pValue, pMsg->msg.handleValueNoti.len);
 
           GUA_Led_Set(GUA_LED_NO_2, GUA_LED_MODE_TOGGLE);   //Toggle the LED
 
-          if(NotifyPackages[0] == 0xa5 && NotifyPackages[1] == 0x01)
+          if(NotifyPackages[0] == PACKAGE_HEAD && NotifyPackages[1] == PACKAGE_TYPE)
           {
-              XORValue = 0;
+              //XOR cheak
               for(uint8_t i = 0; i < 4; i++)
               {
                   XORValue ^= NotifyPackages[i];
@@ -1475,9 +1405,9 @@ static void SimpleBLECentral_processGATTMsg(gattMsgEvent_t *pMsg)
                   SpeedValue = *(uint16_t *)(&NotifyPackages[2]);
                   PWM0Duty = SpeedValue * 1.0 / 10000;
 
-                  PWM0Duty = 0.4 + 0.4 * PWM0Duty;
+                  PWM0Duty = PWM_MIX_DUTY + PWM_MIX_DUTY * PWM0Duty;
 
-                  if(PWM0Duty > 0.4 && PWM0Duty < 0.8)
+                  if(PWM0Duty > PWM_MIX_DUTY && PWM0Duty < PWM_MAX_DUTY)
                   {
                       PWM_setDuty(gPWM0, (PWM_DUTY_FRACTION_MAX * PWM0Duty));
                   }
