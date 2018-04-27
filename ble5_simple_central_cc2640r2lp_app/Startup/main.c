@@ -196,7 +196,7 @@ int main()
   SimpleBLECentral_createTask();
 
   /* PWM peripheral task - Priority 3 */
-  PwmCentral_createTask();
+//  PwmCentral_createTask();
 
   /* enable interrupts and start SYS/BIOS */
   BIOS_start();
