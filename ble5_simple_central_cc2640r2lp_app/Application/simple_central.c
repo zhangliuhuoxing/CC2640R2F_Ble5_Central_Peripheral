@@ -80,8 +80,8 @@
 #include "ble_user_config.h"
 
 // My code
-#include "GUA_Led.h"
-#include "My_PWM.h"
+#include <My_RGB.h>
+#include <My_Motor.h>
 // My code
 
 /*********************************************************************
@@ -674,10 +674,11 @@ static void SimpleBLECentral_init(void)
 
   // My code
   My_PWM_init();
+//  My_RGB_init();
 
-  Util_constructClock(&PWMperiodicClock, SimpleBLECentral_keyChangeHandler,
-                      500, 0, false, 0);
-  Util_startClock(&PWMperiodicClock);
+//  Util_constructClock(&PWMperiodicClock, SimpleBLECentral_keyChangeHandler,
+//                      500, 0, false, 0);
+//  Util_startClock(&PWMperiodicClock);
   // My code
 }
 
@@ -1389,8 +1390,6 @@ static void SimpleBLECentral_processGATTMsg(gattMsgEvent_t *pMsg)
 
           //Copy notify date
           memcpy(NotifyPackages, pMsg->msg.handleValueNoti.pValue, pMsg->msg.handleValueNoti.len);
-
-          GUA_Led_Set(GUA_LED_NO_2, GUA_LED_MODE_TOGGLE);   //Toggle the LED
 
           if(NotifyPackages[0] == PACKAGE_HEAD && NotifyPackages[1] == PACKAGE_TYPE)
           {

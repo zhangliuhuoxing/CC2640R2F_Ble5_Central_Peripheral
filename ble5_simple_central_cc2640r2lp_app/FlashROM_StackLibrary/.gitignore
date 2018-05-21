@@ -1,2 +1,8 @@
 /Application/
 /sources.mk
+/Drivers/
+/ICall/
+/ICallBLE/
+/PROFILES/
+/Startup/
+/TOOLS/

@@ -52,6 +52,7 @@ extern "C" {
 
 #define Board_ADC0              CC2640R2_LAUNCHXL_ADCVSS
 #define Board_ADC1              CC2640R2_LAUNCHXL_ADCVDDS
+#define DC_FB_ADC               CC2640R2_LAUNCHXL_ADCBUF0CHANNEL0
 
 #define Board_ADCBUF0           CC2640R2_LAUNCHXL_ADCBUF0
 #define Board_ADCBUFCHANNEL0    0
@@ -112,10 +113,10 @@ extern "C" {
 
 #define Board_PWM0              CC2640R2_LAUNCHXL_PWM0
 #define Board_PWM1              CC2640R2_LAUNCHXL_PWM1
-#define Board_PWM2              CC2640R2_LAUNCHXL_PWM2
-#define Board_PWM3              CC2640R2_LAUNCHXL_PWM3
-#define Board_PWM4              CC2640R2_LAUNCHXL_PWM4
-#define Board_PWM5              CC2640R2_LAUNCHXL_PWM5
+#define MOTOR_PWM               CC2640R2_MOTOR_PWM         //motor PWM
+#define RGB_R_PWM               CC2640R2_RGB_R_PWM         //RGB PWM
+#define RGB_G_PWM               CC2640R2_RGB_G_PWM         //RGB PWM
+#define RGB_B_PWM               CC2640R2_RGB_B_PWM         //RGB PWM
 #define Board_PWM6              CC2640R2_LAUNCHXL_PWM6
 #define Board_PWM7              CC2640R2_LAUNCHXL_PWM7
 

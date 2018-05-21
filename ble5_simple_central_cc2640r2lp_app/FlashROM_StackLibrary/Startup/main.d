@@ -121,6 +121,47 @@ Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Types.h
 Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/IInstance.h
 Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/interfaces/ITimer.h
 Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/package/Clock_TimerProxy.h
+Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Semaphore.h
+Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Types.h
+Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/IInstance.h
+Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Diags.h
+Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Log.h
+Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Assert.h
+Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Queue.h
+Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Task.h
+Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Types.h
+Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/IInstance.h
+Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Task__prologue.h
+Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Error.h
+Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Assert.h
+Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Diags.h
+Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Log.h
+Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/IHeap.h
+Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Queue.h
+Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/IModule.h
+Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/interfaces/ITaskSupport.h
+Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Types.h
+Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Error.h
+Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/IModule.h
+Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Clock.h
+Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/package/Task_SupportProxy.h
+Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Types.h
+Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/interfaces/ITaskSupport.h
+Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Task__epilogue.h
+Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Clock.h
+Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/IModule.h
+Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Event.h
+Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Types.h
+Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/IInstance.h
+Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Event__prologue.h
+Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Assert.h
+Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Diags.h
+Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Log.h
+Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Queue.h
+Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Clock.h
+Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Task.h
+Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/IModule.h
+Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Event__epilogue.h
 Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/BIOS.h
 Startup/main.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Types.h
 Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/BIOS__prologue.h
@@ -177,15 +218,14 @@ Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640
 Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/rf_ble_cmd.h
 Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/ble5stack/icall/inc/ble_dispatch.h
 Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/ble5stack/target/board.h
-Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/ble5stack/target/./cc2640r2lp/cc2640r2lp_board.h
-Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/ble5stack/target/./cc2640r2lp/../../boards/CC2640R2_LAUNCHXL/Board.h
-Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/ADC.h
-Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/ADCBuf.h
+Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/ble5stack/target/./cc2640r2em/cc2640r2em_board.h
+Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/ble5stack/target/./cc2640r2em/../../boards/CC2640R2DK_4XS/Board.h
+Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/GPIO.h
 Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/PWM.h
 Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/SPI.h
 Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/UART.h
 Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/Watchdog.h
-Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/ble5stack/target/./cc2640r2lp/../../boards/CC2640R2_LAUNCHXL/CC2640R2_LAUNCHXL.h
+Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/ble5stack/target/./cc2640r2em/../../boards/CC2640R2DK_4XS/CC2640R2DK_4XS.h
 Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/PIN.h
 Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/ioc.h
 Startup/main.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/../inc/hw_ioc.h
@@ -318,6 +358,47 @@ C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Types.h:
 C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/IInstance.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/interfaces/ITimer.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/package/Clock_TimerProxy.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Semaphore.h: 
+C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Types.h: 
+C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/IInstance.h: 
+C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Diags.h: 
+C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Log.h: 
+C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Assert.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Queue.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Task.h: 
+C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Types.h: 
+C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/IInstance.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Task__prologue.h: 
+C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Error.h: 
+C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Assert.h: 
+C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Diags.h: 
+C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Log.h: 
+C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/IHeap.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Queue.h: 
+C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/IModule.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/interfaces/ITaskSupport.h: 
+C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Types.h: 
+C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Error.h: 
+C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/IModule.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Clock.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/package/Task_SupportProxy.h: 
+C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Types.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/interfaces/ITaskSupport.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Task__epilogue.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Clock.h: 
+C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/IModule.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Event.h: 
+C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Types.h: 
+C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/IInstance.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Event__prologue.h: 
+C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Assert.h: 
+C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Diags.h: 
+C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Log.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Queue.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Clock.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Task.h: 
+C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/IModule.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/knl/Event__epilogue.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/BIOS.h: 
 C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/Types.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/BIOS__prologue.h: 
@@ -374,15 +455,14 @@ D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_P
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/rf_ble_cmd.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/ble5stack/icall/inc/ble_dispatch.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/ble5stack/target/board.h: 
-D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/ble5stack/target/./cc2640r2lp/cc2640r2lp_board.h: 
-D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/ble5stack/target/./cc2640r2lp/../../boards/CC2640R2_LAUNCHXL/Board.h: 
-D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/ADC.h: 
-D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/ADCBuf.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/ble5stack/target/./cc2640r2em/cc2640r2em_board.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/ble5stack/target/./cc2640r2em/../../boards/CC2640R2DK_4XS/Board.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/GPIO.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/PWM.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/SPI.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/UART.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/Watchdog.h: 
-D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/ble5stack/target/./cc2640r2lp/../../boards/CC2640R2_LAUNCHXL/CC2640R2_LAUNCHXL.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/ble5stack/target/./cc2640r2em/../../boards/CC2640R2DK_4XS/CC2640R2DK_4XS.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/PIN.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/ioc.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/../inc/hw_ioc.h: 

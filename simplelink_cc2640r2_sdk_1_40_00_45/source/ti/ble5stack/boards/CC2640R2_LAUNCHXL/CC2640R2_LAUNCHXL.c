@@ -87,14 +87,14 @@ ADCBufCC26XX_Object adcBufCC26xxObjects[CC2640R2_LAUNCHXL_ADCBUFCOUNT];
  *  entries. The mapping of dio and internal signals is package dependent.
  */
 const ADCBufCC26XX_AdcChannelLutEntry ADCBufCC26XX_adcChannelLut[CC2640R2_LAUNCHXL_ADCBUF0CHANNELCOUNT] = {
-    {CC2640R2_LAUNCHXL_DIO23_ANALOG, ADC_COMPB_IN_AUXIO7},
-    {CC2640R2_LAUNCHXL_DIO24_ANALOG, ADC_COMPB_IN_AUXIO6},
-    {CC2640R2_LAUNCHXL_DIO25_ANALOG, ADC_COMPB_IN_AUXIO5},
-    {CC2640R2_LAUNCHXL_DIO26_ANALOG, ADC_COMPB_IN_AUXIO4},
-    {CC2640R2_LAUNCHXL_DIO27_ANALOG, ADC_COMPB_IN_AUXIO3},
-    {CC2640R2_LAUNCHXL_DIO28_ANALOG, ADC_COMPB_IN_AUXIO2},
-    {CC2640R2_LAUNCHXL_DIO29_ANALOG, ADC_COMPB_IN_AUXIO1},
-    {CC2640R2_LAUNCHXL_DIO30_ANALOG, ADC_COMPB_IN_AUXIO0},
+    {CC2640R2_DC_FB_ADC, ADC_COMPB_IN_AUXIO7},
+    {PIN_UNASSIGNED, ADC_COMPB_IN_AUXIO6},
+    {PIN_UNASSIGNED, ADC_COMPB_IN_AUXIO5},
+    {PIN_UNASSIGNED, ADC_COMPB_IN_AUXIO4},
+    {PIN_UNASSIGNED, ADC_COMPB_IN_AUXIO3},
+    {PIN_UNASSIGNED, ADC_COMPB_IN_AUXIO2},
+    {PIN_UNASSIGNED, ADC_COMPB_IN_AUXIO1},
+    {PIN_UNASSIGNED, ADC_COMPB_IN_AUXIO0},
     {PIN_UNASSIGNED, ADC_COMPB_IN_VDDS},
     {PIN_UNASSIGNED, ADC_COMPB_IN_DCOUPL},
     {PIN_UNASSIGNED, ADC_COMPB_IN_VSS},
@@ -130,7 +130,7 @@ ADCCC26XX_Object adcCC26xxObjects[CC2640R2_LAUNCHXL_ADCCOUNT];
 
 const ADCCC26XX_HWAttrs adcCC26xxHWAttrs[CC2640R2_LAUNCHXL_ADCCOUNT] = {
     {
-        .adcDIO              = CC2640R2_LAUNCHXL_DIO23_ANALOG,
+        .adcDIO              = CC2640R2_DC_FB_ADC,
         .adcCompBInput       = ADC_COMPB_IN_AUXIO7,
         .refSource           = ADCCC26XX_FIXED_REFERENCE,
         .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_2P7_US,
@@ -139,7 +139,7 @@ const ADCCC26XX_HWAttrs adcCC26xxHWAttrs[CC2640R2_LAUNCHXL_ADCCOUNT] = {
         .returnAdjustedVal   = 0
     },
     {
-        .adcDIO              = CC2640R2_LAUNCHXL_DIO24_ANALOG,
+        .adcDIO              = PIN_UNASSIGNED,
         .adcCompBInput       = ADC_COMPB_IN_AUXIO6,
         .refSource           = ADCCC26XX_FIXED_REFERENCE,
         .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_2P7_US,
@@ -148,7 +148,7 @@ const ADCCC26XX_HWAttrs adcCC26xxHWAttrs[CC2640R2_LAUNCHXL_ADCCOUNT] = {
         .returnAdjustedVal   = 0
     },
     {
-        .adcDIO              = CC2640R2_LAUNCHXL_DIO25_ANALOG,
+        .adcDIO              = PIN_UNASSIGNED,
         .adcCompBInput       = ADC_COMPB_IN_AUXIO5,
         .refSource           = ADCCC26XX_FIXED_REFERENCE,
         .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_2P7_US,
@@ -157,7 +157,7 @@ const ADCCC26XX_HWAttrs adcCC26xxHWAttrs[CC2640R2_LAUNCHXL_ADCCOUNT] = {
         .returnAdjustedVal   = 0
     },
     {
-        .adcDIO              = CC2640R2_LAUNCHXL_DIO26_ANALOG,
+        .adcDIO              = PIN_UNASSIGNED,
         .adcCompBInput       = ADC_COMPB_IN_AUXIO4,
         .refSource           = ADCCC26XX_FIXED_REFERENCE,
         .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_2P7_US,
@@ -166,7 +166,7 @@ const ADCCC26XX_HWAttrs adcCC26xxHWAttrs[CC2640R2_LAUNCHXL_ADCCOUNT] = {
         .returnAdjustedVal   = 0
     },
     {
-        .adcDIO              = CC2640R2_LAUNCHXL_DIO27_ANALOG,
+        .adcDIO              = PIN_UNASSIGNED,
         .adcCompBInput       = ADC_COMPB_IN_AUXIO3,
         .refSource           = ADCCC26XX_FIXED_REFERENCE,
         .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_2P7_US,
@@ -175,7 +175,7 @@ const ADCCC26XX_HWAttrs adcCC26xxHWAttrs[CC2640R2_LAUNCHXL_ADCCOUNT] = {
         .returnAdjustedVal   = 0
     },
     {
-        .adcDIO              = CC2640R2_LAUNCHXL_DIO28_ANALOG,
+        .adcDIO              = PIN_UNASSIGNED,
         .adcCompBInput       = ADC_COMPB_IN_AUXIO2,
         .refSource           = ADCCC26XX_FIXED_REFERENCE,
         .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_2P7_US,
@@ -184,7 +184,7 @@ const ADCCC26XX_HWAttrs adcCC26xxHWAttrs[CC2640R2_LAUNCHXL_ADCCOUNT] = {
         .returnAdjustedVal   = 0
     },
     {
-        .adcDIO              = CC2640R2_LAUNCHXL_DIO29_ANALOG,
+        .adcDIO              = PIN_UNASSIGNED,
         .adcCompBInput       = ADC_COMPB_IN_AUXIO1,
         .refSource           = ADCCC26XX_FIXED_REFERENCE,
         .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_2P7_US,
@@ -193,7 +193,7 @@ const ADCCC26XX_HWAttrs adcCC26xxHWAttrs[CC2640R2_LAUNCHXL_ADCCOUNT] = {
         .returnAdjustedVal   = 0
     },
     {
-        .adcDIO              = CC2640R2_LAUNCHXL_DIO30_ANALOG,
+        .adcDIO              = PIN_UNASSIGNED,
         .adcCompBInput       = ADC_COMPB_IN_AUXIO0,
         .refSource           = ADCCC26XX_FIXED_REFERENCE,
         .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_10P9_MS,
@@ -516,14 +516,14 @@ const PowerCC26XX_Config PowerCC26XX_config = {
 PWMTimerCC26XX_Object pwmtimerCC26xxObjects[CC2640R2_LAUNCHXL_PWMCOUNT];
 
 const PWMTimerCC26XX_HwAttrs pwmtimerCC26xxHWAttrs[CC2640R2_LAUNCHXL_PWMCOUNT] = {
-    { .pwmPin = CC2640R2_LAUNCHXL_PWMPIN0, .gpTimerUnit = CC2640R2_LAUNCHXL_GPTIMER0A },
-    { .pwmPin = CC2640R2_LAUNCHXL_PWMPIN1, .gpTimerUnit = CC2640R2_LAUNCHXL_GPTIMER0B },
-    { .pwmPin = CC2640R2_LAUNCHXL_PWMPIN2, .gpTimerUnit = CC2640R2_LAUNCHXL_GPTIMER1A },
-    { .pwmPin = CC2640R2_LAUNCHXL_PWMPIN3, .gpTimerUnit = CC2640R2_LAUNCHXL_GPTIMER1B },
-    { .pwmPin = CC2640R2_LAUNCHXL_PWMPIN4, .gpTimerUnit = CC2640R2_LAUNCHXL_GPTIMER2A },
-    { .pwmPin = CC2640R2_LAUNCHXL_PWMPIN5, .gpTimerUnit = CC2640R2_LAUNCHXL_GPTIMER2B },
-    { .pwmPin = CC2640R2_LAUNCHXL_PWMPIN6, .gpTimerUnit = CC2640R2_LAUNCHXL_GPTIMER3A },
-    { .pwmPin = CC2640R2_LAUNCHXL_PWMPIN7, .gpTimerUnit = CC2640R2_LAUNCHXL_GPTIMER3B },
+    { .pwmPin = CC2640R2_RGB_R_PWM, .gpTimerUnit = CC2640R2_LAUNCHXL_GPTIMER0A },
+    { .pwmPin = PIN_UNASSIGNED, .gpTimerUnit = CC2640R2_LAUNCHXL_GPTIMER0B },
+    { .pwmPin = CC2640R2_MOTOR_PWM, .gpTimerUnit = CC2640R2_LAUNCHXL_GPTIMER1A },
+    { .pwmPin = CC2640R2_RGB_R_PWM, .gpTimerUnit = CC2640R2_LAUNCHXL_GPTIMER1B },
+    { .pwmPin = CC2640R2_RGB_G_PWM, .gpTimerUnit = CC2640R2_LAUNCHXL_GPTIMER2A },
+    { .pwmPin = CC2640R2_RGB_B_PWM, .gpTimerUnit = CC2640R2_LAUNCHXL_GPTIMER2B },
+    { .pwmPin = PIN_UNASSIGNED, .gpTimerUnit = CC2640R2_LAUNCHXL_GPTIMER3A },
+    { .pwmPin = PIN_UNASSIGNED, .gpTimerUnit = CC2640R2_LAUNCHXL_GPTIMER3B },
 };
 
 const PWM_Config PWM_config[CC2640R2_LAUNCHXL_PWMCOUNT] = {
