@@ -115,9 +115,9 @@ extern const PIN_Config BoardGpioInitTable[];
  */
 
 /* Button Board */
-#define CC2640R2DK_4XS_KEY_SELECT                    IOID_7        	/* P1.14 */
-#define CC2640R2DK_4XS_KEY_UP                        IOID_4       	/* P1.10 */
-#define CC2640R2DK_4XS_KEY_DOWN                      IOID_3       	/* P1.12 */
+#define CC2640R2DK_4XS_KEY_SELECT                    PIN_UNASSIGNED        	/* P1.14 */
+#define CC2640R2DK_4XS_KEY_UP                        PIN_UNASSIGNED       	/* P1.10 */
+#define CC2640R2DK_4XS_KEY_DOWN                      PIN_UNASSIGNED       	/* P1.12 */
 #define CC2640R2DK_4XS_KEY_LEFT                      PIN_UNASSIGNED
 #define CC2640R2DK_4XS_KEY_RIGHT                     PIN_UNASSIGNED
 
@@ -130,8 +130,8 @@ extern const PIN_Config BoardGpioInitTable[];
 #define CC2640R2DK_4XS_PIN_LED_OFF                   0
 #define CC2640R2DK_4XS_PIN_LED1                      PIN_UNASSIGNED
 #define CC2640R2DK_4XS_PIN_LED2                      PIN_UNASSIGNED
-#define CC2640R2DK_4XS_PIN_LED3                      IOID_5          	/* P1.2  */
-#define CC2640R2DK_4XS_PIN_LED4                      IOID_6        		/* P1.4  */
+#define CC2640R2DK_4XS_PIN_LED3                      PIN_UNASSIGNED          	/* P1.2  */
+#define CC2640R2DK_4XS_PIN_LED4                      PIN_UNASSIGNED        		/* P1.4  */
 
 /* LCD  Board */
 #define CC2640R2DK_4XS_LCD_MODE                      PIN_UNASSIGNED
@@ -139,27 +139,27 @@ extern const PIN_Config BoardGpioInitTable[];
 #define CC2640R2DK_4XS_LCD_CSN                       PIN_UNASSIGNED
 
 /* SPI Board */
-#define CC2640R2DK_4XS_SPI0_MISO                     IOID_0          	/* P1.20 */
-#define CC2640R2DK_4XS_SPI0_MOSI                     IOID_9          	/* P1.18 */
-#define CC2640R2DK_4XS_SPI0_CLK                      IOID_8         	/* P1.16 */
+#define CC2640R2DK_4XS_SPI0_MISO                     PIN_UNASSIGNED          	/* P1.20 */
+#define CC2640R2DK_4XS_SPI0_MOSI                     PIN_UNASSIGNED          	/* P1.18 */
+#define CC2640R2DK_4XS_SPI0_CLK                      PIN_UNASSIGNED         	/* P1.16 */
 #define CC2640R2DK_4XS_SPI0_CSN                      PIN_UNASSIGNED
 
 /* Power Board */
 #define CC2640R2DK_4XS_3V3_EN                        PIN_UNASSIGNED
 
 /* PWM Outputs */
-#define CC2640R2DK_4XS_PWMPIN0                       CC2640R2DK_4XS_PIN_LED3
-#define CC2640R2DK_4XS_PWMPIN1                       CC2640R2DK_4XS_PIN_LED4
-#define CC2640R2DK_4XS_PWMPIN2                       PIN_UNASSIGNED
-#define CC2640R2DK_4XS_PWMPIN3                       PIN_UNASSIGNED
+#define CC2640R2DK_4XS_PWMPIN0                       IOID_0
+#define CC2640R2DK_4XS_PWMPIN1                       IOID_5
+#define CC2640R2DK_4XS_PWMPIN2                       IOID_6
+#define CC2640R2DK_4XS_PWMPIN3                       IOID_7
 #define CC2640R2DK_4XS_PWMPIN4                       PIN_UNASSIGNED
 #define CC2640R2DK_4XS_PWMPIN5                       PIN_UNASSIGNED
 #define CC2640R2DK_4XS_PWMPIN6                       PIN_UNASSIGNED
 #define CC2640R2DK_4XS_PWMPIN7                       PIN_UNASSIGNED
 
 /* UART Board */
-#define CC2640R2DK_4XS_UART_RX                       IOID_1          	/* P1.7 */
-#define CC2640R2DK_4XS_UART_TX                       IOID_2          	/* P1.9 */
+#define CC2640R2DK_4XS_UART_RX                       PIN_UNASSIGNED          	/* P1.7 */
+#define CC2640R2DK_4XS_UART_TX                       PIN_UNASSIGNED          	/* P1.9 */
 #define CC2640R2DK_4XS_UART_CTS                      PIN_UNASSIGNED
 #define CC2640R2DK_4XS_UART_RTS                      PIN_UNASSIGNED
 

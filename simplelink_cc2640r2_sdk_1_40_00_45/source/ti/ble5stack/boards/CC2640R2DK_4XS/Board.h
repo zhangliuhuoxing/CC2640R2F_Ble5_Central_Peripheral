@@ -86,10 +86,10 @@ extern "C" {
 #define Board_PIN_LED1          CC2640R2DK_4XS_PIN_LED4
 #define Board_PIN_LED2          Board_PIN_LED0
 
-#define Board_PWM0              CC2640R2DK_4XS_PWM0
-#define Board_PWM1              CC2640R2DK_4XS_PWM1
-#define Board_PWM2              CC2640R2DK_4XS_PWM2
-#define Board_PWM3              CC2640R2DK_4XS_PWM3
+#define MOTOR_PWM               CC2640R2DK_4XS_PWM0
+#define RGB_R_PWM               CC2640R2DK_4XS_PWM1
+#define RGB_G_PWM               CC2640R2DK_4XS_PWM2
+#define RGB_B_PWM               CC2640R2DK_4XS_PWM3
 #define Board_PWM4              CC2640R2DK_4XS_PWM4
 #define Board_PWM5              CC2640R2DK_4XS_PWM5
 #define Board_PWM6              CC2640R2DK_4XS_PWM6
