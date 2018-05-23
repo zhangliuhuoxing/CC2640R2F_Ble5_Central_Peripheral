@@ -673,12 +673,14 @@ static void SimpleBLECentral_init(void)
   Display_print0(dispHandle, 0, 0, "BLE Central");
 
   // My code
-  My_PWM_init();
-//  My_RGB_init();
+  my_Motor_init();
+  my_RGB_init();
 
-//  Util_constructClock(&PWMperiodicClock, SimpleBLECentral_keyChangeHandler,
-//                      500, 0, false, 0);
-//  Util_startClock(&PWMperiodicClock);
+  my_RGB_set_colour(RGB_COLOUR_GREEN);
+
+  Util_constructClock(&PWMperiodicClock, SimpleBLECentral_keyChangeHandler,
+                      500, 0, false, 0);
+  Util_startClock(&PWMperiodicClock);
   // My code
 }
 
@@ -1398,6 +1400,8 @@ static void SimpleBLECentral_processGATTMsg(gattMsgEvent_t *pMsg)
               {
                   XORValue ^= NotifyPackages[i];
               }
+
+              my_RGB_flash();
 
               if(XORValue == NotifyPackages[4])
               {

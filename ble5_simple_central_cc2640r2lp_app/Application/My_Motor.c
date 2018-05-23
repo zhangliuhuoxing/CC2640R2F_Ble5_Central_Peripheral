@@ -9,7 +9,7 @@
 PWM_Handle gPWM0;
 
 // Initialize the PWM driver.
-PWM_STATUS My_PWM_init(void)
+PWM_STATUS my_Motor_init(void)
 {
     PWM_Params pwmParams;
 
@@ -23,7 +23,7 @@ PWM_STATUS My_PWM_init(void)
     pwmParams.dutyUnits = PWM_DUTY_FRACTION; // Duty is in fractional percentage
     pwmParams.dutyValue = 0;                 // 0% initial duty cycle
     // Open the PWM instance
-//    gPWM0 = PWM_open(MOTOR_PWM, &pwmParams);
+    gPWM0 = PWM_open(MOTOR_PWM, &pwmParams);
 
     if (gPWM0 == NULL)
     {

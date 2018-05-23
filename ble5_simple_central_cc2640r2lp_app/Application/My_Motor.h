@@ -13,6 +13,6 @@
 
 extern PWM_Handle gPWM0;
 
-PWM_STATUS My_PWM_init(void);
+PWM_STATUS my_Motor_init(void);
 
 #endif
