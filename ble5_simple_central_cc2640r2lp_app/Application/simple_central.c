@@ -146,11 +146,11 @@
 
 // Minimum connection interval (units of 1.25ms) if automatic parameter update
 // request is enabled
-#define DEFAULT_UPDATE_MIN_CONN_INTERVAL      400
+#define DEFAULT_UPDATE_MIN_CONN_INTERVAL      8
 
 // Maximum connection interval (units of 1.25ms) if automatic parameter update
 // request is enabled
-#define DEFAULT_UPDATE_MAX_CONN_INTERVAL      800
+#define DEFAULT_UPDATE_MAX_CONN_INTERVAL      80
 
 // Slave latency to use if automatic parameter update request is enabled
 #define DEFAULT_UPDATE_SLAVE_LATENCY          0
@@ -673,6 +673,8 @@ static void SimpleBLECentral_init(void)
   Display_print0(dispHandle, 0, 0, "BLE Central");
 
   // My code
+  HCI_EXT_SetTxPowerCmd(HCI_EXT_TX_POWER_5_DBM);
+
   my_Motor_init();
   my_RGB_init();
 

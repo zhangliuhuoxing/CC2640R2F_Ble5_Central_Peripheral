@@ -80,8 +80,8 @@
 									<listOptionValue builtIn="false" value="${INHERITED_SYMBOLS}"/>
 									<listOptionValue builtIn="false" value="DeviceFamily_CC26X0R2"/>
 									<listOptionValue builtIn="false" value="BOARD_DISPLAY_USE_LCD=0"/>
-									<listOptionValue builtIn="false" value="BOARD_DISPLAY_USE_UART=1"/>
-									<listOptionValue builtIn="false" value="BOARD_DISPLAY_USE_UART_ANSI=1"/>
+									<listOptionValue builtIn="false" value="BOARD_DISPLAY_USE_UART=0"/>
+									<listOptionValue builtIn="false" value="BOARD_DISPLAY_USE_UART_ANSI=0"/>
 									<listOptionValue builtIn="false" value="CC2640R2DK_4XS"/>
 									<listOptionValue builtIn="false" value="CC26XX"/>
 									<listOptionValue builtIn="false" value="CC26XX_R2"/>
