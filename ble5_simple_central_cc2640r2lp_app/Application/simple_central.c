@@ -82,6 +82,7 @@
 // My code
 #include <My_RGB.h>
 #include <My_Motor.h>
+#include <My_Battery.h>
 // My code
 
 /*********************************************************************
@@ -160,7 +161,7 @@
 #define DEFAULT_UPDATE_CONN_TIMEOUT           600
 
 // Default passcode
-#define DEFAULT_PASSCODE                      19655
+#define DEFAULT_PASSCODE                      19655     //19655
 
 // Default GAP pairing mode
 #define DEFAULT_PAIRING_MODE                  GAPBOND_PAIRING_MODE_WAIT_FOR_REQ
@@ -301,11 +302,7 @@ Task_Struct sbcTask;
 Char sbcTaskStack[SBC_TASK_STACK_SIZE];
 
 // My code
-Task_Struct pwmTask;
-Char pwmTaskStack[SBC_TASK_STACK_SIZE];
-
 static Clock_Struct PWMperiodicClock;
-
 static uint8_t KeyCount = 0;
 // My code
 
@@ -488,6 +485,7 @@ static void SimpleBLECentral_connectToFirstDevice(void)
     Display_print0(dispHandle, 2, 0, "Connecting");
     Display_print0(dispHandle, 3, 0, Util_convertBdAddr2Str(peerAddr));
     Display_clearLine(dispHandle, 4);
+    my_RGB_set_colour(RGB_COLOUR_RED);
   }
 }
 #endif // FPGA_AUTO_CONNECT
@@ -675,14 +673,16 @@ static void SimpleBLECentral_init(void)
   // My code
   HCI_EXT_SetTxPowerCmd(HCI_EXT_TX_POWER_5_DBM);
 
+  My_Battery_init();
+
   my_Motor_init();
   my_RGB_init();
 
   my_RGB_set_colour(RGB_COLOUR_GREEN);
 
-  Util_constructClock(&PWMperiodicClock, SimpleBLECentral_keyChangeHandler,
-                      500, 0, false, 0);
-  Util_startClock(&PWMperiodicClock);
+//  Util_constructClock(&PWMperiodicClock, SimpleBLECentral_keyChangeHandler,
+//                      500, 0, false, 0);
+//  Util_startClock(&PWMperiodicClock);
   // My code
 }
 
@@ -710,6 +710,7 @@ static void SimpleBLECentral_taskFxn(UArg a0, UArg a1)
 
     if (events)
     {
+      //No maintenance required
       ICall_EntityID dest;
       ICall_ServiceEnum src;
       ICall_HciExtEvt *pMsg = NULL;
@@ -728,6 +729,7 @@ static void SimpleBLECentral_taskFxn(UArg a0, UArg a1)
           ICall_freeMsg(pMsg);
         }
       }
+      //No maintenance required
 
       // If RTOS queue is not empty, process app message
       if (events & SBC_QUEUE_EVT)
@@ -746,10 +748,12 @@ static void SimpleBLECentral_taskFxn(UArg a0, UArg a1)
         }
       }
 
+      //No maintenance required
       if (events & SBC_START_DISCOVERY_EVT)
       {
         SimpleBLECentral_startDiscovery();
       }
+      //No maintenance required
     }
   }
 }
@@ -1075,8 +1079,8 @@ static void SimpleBLECentral_AutoConnect(uint8_t shift, uint8_t keys)
             Display_print0(dispHandle, 3, 0, Util_convertBdAddr2Str(devList[scanIdx].addr));
             Display_print0(dispHandle, 5, 0, "Connect ->");
             Display_print0(dispHandle, 6, 0, "<- Next Option");
-            Util_rescheduleClock(&PWMperiodicClock, 1000);
-            Util_startClock(&PWMperiodicClock);
+//            Util_rescheduleClock(&PWMperiodicClock, 1000);
+//            Util_startClock(&PWMperiodicClock);
           }
         }
       }
@@ -1089,8 +1093,8 @@ static void SimpleBLECentral_AutoConnect(uint8_t shift, uint8_t keys)
         {
           case GATT_RW:
             Display_print0(dispHandle, 5, 0, "GATT Read/Write ->");
-            Util_rescheduleClock(&PWMperiodicClock, 5000);
-            Util_startClock(&PWMperiodicClock);
+//            Util_rescheduleClock(&PWMperiodicClock, 5000);
+//            Util_startClock(&PWMperiodicClock);
             break;
 
           case RSSI:
@@ -1143,8 +1147,8 @@ static void SimpleBLECentral_AutoConnect(uint8_t shift, uint8_t keys)
             GAPCentralRole_StartDiscovery(DEFAULT_DISCOVERY_MODE,
                                           DEFAULT_DISCOVERY_ACTIVE_SCAN,
                                           DEFAULT_DISCOVERY_WHITE_LIST);
-            Util_rescheduleClock(&PWMperiodicClock, 6000);
-            Util_startClock(&PWMperiodicClock);
+//            Util_rescheduleClock(&PWMperiodicClock, 6000);
+//            Util_startClock(&PWMperiodicClock);
           }
         }
         // Connect if there is a scan result
@@ -1168,8 +1172,8 @@ static void SimpleBLECentral_AutoConnect(uint8_t shift, uint8_t keys)
           scanRes = 0;
           scanIdx = -1;
 
-          Util_rescheduleClock(&PWMperiodicClock, 1000);
-          Util_startClock(&PWMperiodicClock);
+//          Util_rescheduleClock(&PWMperiodicClock, 1000);
+//          Util_startClock(&PWMperiodicClock);
         }
       }
       else if (state == BLE_STATE_CONNECTED)
@@ -1280,7 +1284,7 @@ static void SimpleBLECentral_AutoConnect(uint8_t shift, uint8_t keys)
                           GATT_bm_free((gattMsg_t *)&writeReq, ATT_WRITE_REQ);
                       }
                   }
-                  Util_stopClock(&PWMperiodicClock);
+//                  Util_stopClock(&PWMperiodicClock);
               }
               break;
 
@@ -1404,6 +1408,8 @@ static void SimpleBLECentral_processGATTMsg(gattMsgEvent_t *pMsg)
               }
 
               my_RGB_flash();
+              adc_value = My_Battery_Get_Voltage(adc);
+              micro_volt = ADC_convertToMicroVolts(adc, adc_value);
 
               if(XORValue == NotifyPackages[4])
               {

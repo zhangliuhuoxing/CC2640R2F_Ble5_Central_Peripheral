@@ -74,6 +74,182 @@
 #include "CC2640R2DK_4XS.h"
 
 /*
+ *  =============================== ADCBuf ===============================
+ */
+#include <ti/drivers/ADCBuf.h>
+#include <ti/drivers/adcbuf/ADCBufCC26XX.h>
+
+ADCBufCC26XX_Object adcBufCC26xxObjects[CC2640R2_4XS_ADCBUFCOUNT];
+
+/*
+ *  This table converts a virtual adc channel into a dio and internal analogue
+ *  input signal. This table is necessary for the functioning of the adcBuf
+ *  driver. Comment out unused entries to save flash. Dio and internal signal
+ *  pairs are hardwired. Do not remap them in the table. You may reorder entire
+ *  entries. The mapping of dio and internal signals is package dependent.
+ */
+const ADCBufCC26XX_AdcChannelLutEntry ADCBufCC26XX_adcChannelLut[CC2640R2_4XS_ADCBUF0CHANNELCOUNT] = {
+    {CC2640R2_4XS_DIO08_ANALOG, ADC_COMPB_IN_AUXIO7},
+    {CC2640R2_4XS_DIO09_ANALOG, ADC_COMPB_IN_AUXIO6},
+    {PIN_UNASSIGNED, ADC_COMPB_IN_AUXIO5},
+    {PIN_UNASSIGNED, ADC_COMPB_IN_AUXIO4},
+    {PIN_UNASSIGNED, ADC_COMPB_IN_AUXIO3},
+    {PIN_UNASSIGNED, ADC_COMPB_IN_AUXIO2},
+    {PIN_UNASSIGNED, ADC_COMPB_IN_AUXIO1},
+    {PIN_UNASSIGNED, ADC_COMPB_IN_AUXIO0},
+    {PIN_UNASSIGNED, ADC_COMPB_IN_VDDS},
+    {PIN_UNASSIGNED, ADC_COMPB_IN_DCOUPL},
+    {PIN_UNASSIGNED, ADC_COMPB_IN_VSS},
+};
+
+const ADCBufCC26XX_HWAttrs adcBufCC26xxHWAttrs[CC2640R2_4XS_ADCBUFCOUNT] = {
+    {
+        .intPriority       = ~0,
+        .swiPriority       = 0,
+        .adcChannelLut     = ADCBufCC26XX_adcChannelLut,
+        .gpTimerUnit       = CC2640R2DK_4XS_GPTIMER0A,
+        .gptDMAChannelMask = 1 << UDMA_CHAN_TIMER0_A,
+    }
+};
+
+const ADCBuf_Config ADCBuf_config[CC2640R2_4XS_ADCBUFCOUNT] = {
+    {
+        &ADCBufCC26XX_fxnTable,
+        &adcBufCC26xxObjects[CC2640R2_4XS_ADCBUF0],
+        &adcBufCC26xxHWAttrs[CC2640R2_4XS_ADCBUF0]
+    },
+};
+
+const uint_least8_t ADCBuf_count = CC2640R2_4XS_ADCBUFCOUNT;
+
+/*
+ *  =============================== ADC ===============================
+ */
+#include <ti/drivers/ADC.h>
+#include <ti/drivers/adc/ADCCC26XX.h>
+
+ADCCC26XX_Object adcCC26xxObjects[CC2640R2_4XS_ADCCOUNT];
+
+const ADCCC26XX_HWAttrs adcCC26xxHWAttrs[CC2640R2_4XS_ADCCOUNT] = {
+    {
+        .adcDIO              = PIN_UNASSIGNED,
+        .adcCompBInput       = ADC_COMPB_IN_AUXIO7,
+        .refSource           = ADCCC26XX_FIXED_REFERENCE,
+        .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_2P7_US,
+        .inputScalingEnabled = true,
+        .triggerSource       = ADCCC26XX_TRIGGER_MANUAL,
+        .returnAdjustedVal   = 0
+    },
+    {
+        .adcDIO              = PIN_UNASSIGNED,
+        .adcCompBInput       = ADC_COMPB_IN_AUXIO6,
+        .refSource           = ADCCC26XX_FIXED_REFERENCE,
+        .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_2P7_US,
+        .inputScalingEnabled = true,
+        .triggerSource       = ADCCC26XX_TRIGGER_MANUAL,
+        .returnAdjustedVal   = 0
+    },
+    {
+        .adcDIO              = PIN_UNASSIGNED,
+        .adcCompBInput       = ADC_COMPB_IN_AUXIO5,
+        .refSource           = ADCCC26XX_FIXED_REFERENCE,
+        .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_2P7_US,
+        .inputScalingEnabled = true,
+        .triggerSource       = ADCCC26XX_TRIGGER_MANUAL,
+        .returnAdjustedVal   = 0
+    },
+    {
+        .adcDIO              = CC2640R2_4XS_DIO08_ANALOG,
+        .adcCompBInput       = ADC_COMPB_IN_AUXIO4,
+        .refSource           = ADCCC26XX_FIXED_REFERENCE,
+        .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_2P7_US,
+        .inputScalingEnabled = true,
+        .triggerSource       = ADCCC26XX_TRIGGER_MANUAL,
+        .returnAdjustedVal   = 0
+    },
+    {
+        .adcDIO              = CC2640R2_4XS_DIO09_ANALOG,
+        .adcCompBInput       = ADC_COMPB_IN_AUXIO3,
+        .refSource           = ADCCC26XX_FIXED_REFERENCE,
+        .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_2P7_US,
+        .inputScalingEnabled = true,
+        .triggerSource       = ADCCC26XX_TRIGGER_MANUAL,
+        .returnAdjustedVal   = 0
+    },
+    {
+        .adcDIO              = PIN_UNASSIGNED,
+        .adcCompBInput       = ADC_COMPB_IN_AUXIO2,
+        .refSource           = ADCCC26XX_FIXED_REFERENCE,
+        .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_2P7_US,
+        .inputScalingEnabled = true,
+        .triggerSource       = ADCCC26XX_TRIGGER_MANUAL,
+        .returnAdjustedVal   = 0
+    },
+    {
+        .adcDIO              = PIN_UNASSIGNED,
+        .adcCompBInput       = ADC_COMPB_IN_AUXIO1,
+        .refSource           = ADCCC26XX_FIXED_REFERENCE,
+        .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_2P7_US,
+        .inputScalingEnabled = true,
+        .triggerSource       = ADCCC26XX_TRIGGER_MANUAL,
+        .returnAdjustedVal   = 0
+    },
+    {
+        .adcDIO              = PIN_UNASSIGNED,
+        .adcCompBInput       = ADC_COMPB_IN_AUXIO0,
+        .refSource           = ADCCC26XX_FIXED_REFERENCE,
+        .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_10P9_MS,
+        .inputScalingEnabled = true,
+        .triggerSource       = ADCCC26XX_TRIGGER_MANUAL,
+        .returnAdjustedVal   = 0
+    },
+    {
+        .adcDIO              = PIN_UNASSIGNED,
+        .adcCompBInput       = ADC_COMPB_IN_DCOUPL,
+        .refSource           = ADCCC26XX_FIXED_REFERENCE,
+        .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_2P7_US,
+        .inputScalingEnabled = true,
+        .triggerSource       = ADCCC26XX_TRIGGER_MANUAL,
+        .returnAdjustedVal   = 0
+    },
+    {
+        .adcDIO              = PIN_UNASSIGNED,
+        .adcCompBInput       = ADC_COMPB_IN_VSS,
+        .refSource           = ADCCC26XX_FIXED_REFERENCE,
+        .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_2P7_US,
+        .inputScalingEnabled = true,
+        .triggerSource       = ADCCC26XX_TRIGGER_MANUAL,
+        .returnAdjustedVal   = 0
+    },
+    {
+        .adcDIO              = PIN_UNASSIGNED,
+        .adcCompBInput       = ADC_COMPB_IN_VDDS,
+        .refSource           = ADCCC26XX_FIXED_REFERENCE,
+        .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_2P7_US,
+        .inputScalingEnabled = true,
+        .triggerSource       = ADCCC26XX_TRIGGER_MANUAL,
+        .returnAdjustedVal   = 0
+    }
+};
+
+const ADC_Config ADC_config[CC2640R2_4XS_ADCCOUNT] = {
+    {&ADCCC26XX_fxnTable, &adcCC26xxObjects[CC2640R2_4XS_ADC0], &adcCC26xxHWAttrs[CC2640R2_4XS_ADC0]},
+    {&ADCCC26XX_fxnTable, &adcCC26xxObjects[CC2640R2_4XS_ADC1], &adcCC26xxHWAttrs[CC2640R2_4XS_ADC1]},
+    {&ADCCC26XX_fxnTable, &adcCC26xxObjects[CC2640R2_4XS_ADC2], &adcCC26xxHWAttrs[CC2640R2_4XS_ADC2]},
+    {&ADCCC26XX_fxnTable, &adcCC26xxObjects[CC2640R2_4XS_ADC3], &adcCC26xxHWAttrs[CC2640R2_4XS_ADC3]},
+    {&ADCCC26XX_fxnTable, &adcCC26xxObjects[CC2640R2_4XS_ADC4], &adcCC26xxHWAttrs[CC2640R2_4XS_ADC4]},
+    {&ADCCC26XX_fxnTable, &adcCC26xxObjects[CC2640R2_4XS_ADC5], &adcCC26xxHWAttrs[CC2640R2_4XS_ADC5]},
+    {&ADCCC26XX_fxnTable, &adcCC26xxObjects[CC2640R2_4XS_ADC6], &adcCC26xxHWAttrs[CC2640R2_4XS_ADC6]},
+    {&ADCCC26XX_fxnTable, &adcCC26xxObjects[CC2640R2_4XS_ADC7], &adcCC26xxHWAttrs[CC2640R2_4XS_ADC7]},
+    {&ADCCC26XX_fxnTable, &adcCC26xxObjects[CC2640R2_4XS_ADCDCOUPL], &adcCC26xxHWAttrs[CC2640R2_4XS_ADCDCOUPL]},
+    {&ADCCC26XX_fxnTable, &adcCC26xxObjects[CC2640R2_4XS_ADCVSS], &adcCC26xxHWAttrs[CC2640R2_4XS_ADCVSS]},
+    {&ADCCC26XX_fxnTable, &adcCC26xxObjects[CC2640R2_4XS_ADCVDDS], &adcCC26xxHWAttrs[CC2640R2_4XS_ADCVDDS]},
+};
+
+const uint_least8_t ADC_count = CC2640R2_4XS_ADCCOUNT;
+
+
+/*
  *  =============================== Power ===============================
  */
 #include <ti/drivers/Power.h>

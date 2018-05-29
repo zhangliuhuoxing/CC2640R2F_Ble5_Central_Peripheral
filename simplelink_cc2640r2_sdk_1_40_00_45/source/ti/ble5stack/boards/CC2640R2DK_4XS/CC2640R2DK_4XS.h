@@ -98,8 +98,8 @@ extern const PIN_Config BoardGpioInitTable[];
  *  Define only one symbol:
  *  CC2650EM_7ID    - Differential RF and internal biasing
                       (default for CC2640R2 LaunchPad)
- *  CC2650EM_5XD    � Differential RF and external biasing
- *  CC2650EM_4XS    � Single-ended RF on RF-P and external biasing
+ *  CC2650EM_5XD    锟� Differential RF and external biasing
+ *  CC2650EM_4XS    锟� Single-ended RF on RF-P and external biasing
  *  CC2640R2DK_CXS  - WCSP: Single-ended RF on RF-N and external biasing
  *                    (Note that the WCSP is only tested and characterized for
  *                     single ended configuration, and it has a WCSP-specific
@@ -113,6 +113,13 @@ extern const PIN_Config BoardGpioInitTable[];
 /* Mapping of pins to board signals using general board aliases
  *      <board signal alias>                <pin mapping>
  */
+
+/* Analog Capable DIOs */
+#define CC2640R2_4XS_DIO05_ANALOG          PIN_UNASSIGNED
+#define CC2640R2_4XS_DIO06_ANALOG          PIN_UNASSIGNED
+#define CC2640R2_4XS_DIO07_ANALOG          PIN_UNASSIGNED
+#define CC2640R2_4XS_DIO08_ANALOG          IOID_8
+#define CC2640R2_4XS_DIO09_ANALOG          IOID_9
 
 /* Button Board */
 #define CC2640R2DK_4XS_KEY_SELECT                    PIN_UNASSIGNED        	/* P1.14 */
@@ -169,6 +176,56 @@ extern const PIN_Config BoardGpioInitTable[];
  *  This function initializes the general board specific settings.
  */
 void CC2640R2DK_4XS_initGeneral(void);
+
+/*!
+ *  @def    CC2640R2_4XS_ADCBufName
+ *  @brief  Enum of ADCs
+ */
+typedef enum CC2640R2_4XS_ADCBufName {
+    CC2640R2_4XS_ADCBUF0 = 0,
+
+    CC2640R2_4XS_ADCBUFCOUNT
+} CC2640R2_4XS_ADCBufName;
+
+/*!
+ *  @def    CC2640R2_4XS_ADCBuf0SourceName
+ *  @brief  Enum of ADCBuf channels
+ */
+typedef enum CC2640R2_4XS_ADCBuf0ChannelName {
+    CC2640R2_4XS_ADCBUF0CHANNEL0 = 0,
+    CC2640R2_4XS_ADCBUF0CHANNEL1,
+    CC2640R2_4XS_ADCBUF0CHANNEL2,
+    CC2640R2_4XS_ADCBUF0CHANNEL3,
+    CC2640R2_4XS_ADCBUF0CHANNEL4,
+    CC2640R2_4XS_ADCBUF0CHANNEL5,
+    CC2640R2_4XS_ADCBUF0CHANNEL6,
+    CC2640R2_4XS_ADCBUF0CHANNEL7,
+    CC2640R2_4XS_ADCBUF0CHANNELVDDS,
+    CC2640R2_4XS_ADCBUF0CHANNELDCOUPL,
+    CC2640R2_4XS_ADCBUF0CHANNELVSS,
+
+    CC2640R2_4XS_ADCBUF0CHANNELCOUNT
+} CC2640R2_4XS_ADCBuf0ChannelName;
+
+/*!
+ *  @def    CC2640R2_4XS_ADCName
+ *  @brief  Enum of ADCs
+ */
+typedef enum CC2640R2_4XS_ADCName {
+    CC2640R2_4XS_ADC0 = 0,
+    CC2640R2_4XS_ADC1,
+    CC2640R2_4XS_ADC2,
+    CC2640R2_4XS_ADC3,
+    CC2640R2_4XS_ADC4,
+    CC2640R2_4XS_ADC5,
+    CC2640R2_4XS_ADC6,
+    CC2640R2_4XS_ADC7,
+    CC2640R2_4XS_ADCDCOUPL,
+    CC2640R2_4XS_ADCVSS,
+    CC2640R2_4XS_ADCVDDS,
+
+    CC2640R2_4XS_ADCCOUNT
+} CC2640R2_4XS_ADCName;
 
 /*!
  *  @def    CC2640R2DK_4XS_CryptoName

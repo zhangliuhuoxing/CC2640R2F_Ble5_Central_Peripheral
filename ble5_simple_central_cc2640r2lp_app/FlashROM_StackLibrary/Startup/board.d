@@ -154,25 +154,35 @@ Startup/board.obj: C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/IModule.h
 Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/family/arm/m3/Hwi__epilogue.h
 Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/udma.h
 Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/../inc/hw_udma.h
+Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/ADCBuf.h
+Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/adcbuf/ADCBufCC26XX.h
+Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/pin/PINCC26XX.h
+Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/dpl/HwiP.h
+Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/DeviceFamily.h
+Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/dma/UDMACC26XX.h
 Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/Power.h
 Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/utils/List.h
 Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/power/PowerCC26XX.h
-Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/dpl/HwiP.h
 Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/dpl/ClockP.h
-Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/crypto/CryptoCC26XX.h
-Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/DeviceFamily.h
-Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/crypto.h
-Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/../inc/hw_crypto.h
-Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/dpl/SemaphoreP.h
-Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/display/Display.h
-Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/display/DisplayUart.h
-Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/gpio/GPIOCC26XX.h
 Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/timer/GPTimerCC26XX.h
 Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/inc/hw_gpt.h
 Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/event.h
 Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/../inc/hw_event.h
 Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/timer.h
-Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/pin/PINCC26XX.h
+Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/aux_adc.h
+Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/../inc/hw_adi.h
+Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/../inc/hw_adi_4_aux.h
+Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/../inc/hw_aux_anaif.h
+Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/dpl/SemaphoreP.h
+Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/dpl/SwiP.h
+Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/ADC.h
+Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/adc/ADCCC26XX.h
+Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/crypto/CryptoCC26XX.h
+Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/crypto.h
+Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/../inc/hw_crypto.h
+Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/display/Display.h
+Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/display/DisplayUart.h
+Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/gpio/GPIOCC26XX.h
 Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/pwm/PWMTimerCC26XX.h
 Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/rf/RF.h
 Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/rf_common_cmd.h
@@ -183,8 +193,6 @@ Startup/board.obj: C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/link
 Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/rf_prop_cmd.h
 Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/rf_ble_cmd.h
 Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/spi/SPICC26XXDMA.h
-Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/dma/UDMACC26XX.h
-Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/dpl/SwiP.h
 Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/uart/UARTCC26XX.h
 Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/utils/RingBuf.h
 Startup/board.obj: D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/uart.h
@@ -346,25 +354,35 @@ C:/ti/xdctools_3_50_03_33_core/packages/xdc/runtime/IModule.h:
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/kernel/tirtos/packages/ti/sysbios/family/arm/m3/Hwi__epilogue.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/udma.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/../inc/hw_udma.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/ADCBuf.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/adcbuf/ADCBufCC26XX.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/pin/PINCC26XX.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/dpl/HwiP.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/DeviceFamily.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/dma/UDMACC26XX.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/Power.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/utils/List.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/power/PowerCC26XX.h: 
-D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/dpl/HwiP.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/dpl/ClockP.h: 
-D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/crypto/CryptoCC26XX.h: 
-D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/DeviceFamily.h: 
-D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/crypto.h: 
-D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/../inc/hw_crypto.h: 
-D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/dpl/SemaphoreP.h: 
-D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/display/Display.h: 
-D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/display/DisplayUart.h: 
-D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/gpio/GPIOCC26XX.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/timer/GPTimerCC26XX.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/inc/hw_gpt.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/event.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/../inc/hw_event.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/timer.h: 
-D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/pin/PINCC26XX.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/aux_adc.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/../inc/hw_adi.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/../inc/hw_adi_4_aux.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/../inc/hw_aux_anaif.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/dpl/SemaphoreP.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/dpl/SwiP.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/ADC.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/adc/ADCCC26XX.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/crypto/CryptoCC26XX.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/crypto.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/../inc/hw_crypto.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/display/Display.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/display/DisplayUart.h: 
+D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/gpio/GPIOCC26XX.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/pwm/PWMTimerCC26XX.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/rf/RF.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/rf_common_cmd.h: 
@@ -375,8 +393,6 @@ C:/ti/ccsv8/tools/compiler/ti-cgt-arm_18.1.1.LTS/include/linkage.h:
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/rf_prop_cmd.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/rf_ble_cmd.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/spi/SPICC26XXDMA.h: 
-D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/dma/UDMACC26XX.h: 
-D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/dpl/SwiP.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/uart/UARTCC26XX.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/drivers/utils/RingBuf.h: 
 D:/WorkSpace/Project/CCS/workspace_v8/CC2640R2F_Project/CC2640R2F_Ble5_Central_Peripheral/simplelink_cc2640r2_sdk_1_40_00_45/source/ti/devices/cc26x0r2/driverlib/uart.h: 

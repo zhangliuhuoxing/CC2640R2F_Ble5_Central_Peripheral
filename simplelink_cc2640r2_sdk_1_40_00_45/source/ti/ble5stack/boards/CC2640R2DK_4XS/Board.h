@@ -49,6 +49,9 @@ extern "C" {
 
 /* These #defines allow us to reuse TI-RTOS across other device families */
 
+#define ACCELERATOR_ADC        CC2640R2_4XS_ADC3   //accelerator
+#define BATTERY_FB_ADC         CC2640R2_4XS_ADC4   //battery feedback
+
 #define Board_3V3_EN            CC2640R2DK_4XS_3V3_EN
 
 #define Board_CRYPTO0           CC2640R2DK_4XS_CRYPTO0
