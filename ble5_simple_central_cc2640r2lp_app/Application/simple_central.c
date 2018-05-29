@@ -139,7 +139,7 @@
 #define DEFAULT_LINK_WHITE_LIST               FALSE
 
 // Default RSSI polling period in ms
-#define DEFAULT_RSSI_PERIOD                   1000
+#define DEFAULT_RSSI_PERIOD                   10000
 
 // After the connection is formed, the central will accept connection parameter
 // update requests from the peripheral
@@ -482,10 +482,10 @@ static void SimpleBLECentral_connectToFirstDevice(void)
                                  DEFAULT_LINK_WHITE_LIST,
                                  addrType, peerAddr);
 
-    Display_print0(dispHandle, 2, 0, "Connecting");
-    Display_print0(dispHandle, 3, 0, Util_convertBdAddr2Str(peerAddr));
-    Display_clearLine(dispHandle, 4);
-    my_RGB_set_colour(RGB_COLOUR_RED);
+//    Display_print0(dispHandle, 2, 0, "Connecting");
+//    Display_print0(dispHandle, 3, 0, Util_convertBdAddr2Str(peerAddr));
+//    Display_clearLine(dispHandle, 4);
+
   }
 }
 #endif // FPGA_AUTO_CONNECT
@@ -678,11 +678,7 @@ static void SimpleBLECentral_init(void)
   my_Motor_init();
   my_RGB_init();
 
-  my_RGB_set_colour(RGB_COLOUR_GREEN);
-
-//  Util_constructClock(&PWMperiodicClock, SimpleBLECentral_keyChangeHandler,
-//                      500, 0, false, 0);
-//  Util_startClock(&PWMperiodicClock);
+  my_RGB_set_colour(RGB_COLOUR_RED);
   // My code
 }
 
@@ -994,11 +990,13 @@ static void SimpleBLECentral_processRoleEvent(gapCentralRoleEvent_t *pEvent)
             Util_startClock(&startDiscClock);
           }
 
+          my_RGB_set_colour(RGB_COLOUR_GREEN);
+
           Display_print0(dispHandle, 2, 0, "Connected");
           Display_print0(dispHandle, 3, 0, Util_convertBdAddr2Str(pEvent->linkCmpl.devAddr));
 
-          // Display the initial options for a Right key press.
-          SimpleBLECentral_AutoConnect(0, KEY_LEFT);
+      // Display the initial options for a Right key press.
+//          SimpleBLECentral_AutoConnect(0, KEY_LEFT);
         }
         else
         {
@@ -1048,266 +1046,282 @@ static void SimpleBLECentral_processRoleEvent(gapCentralRoleEvent_t *pEvent)
 
 static void SimpleBLECentral_AutoConnect(uint8_t shift, uint8_t keys)
 {
-    (void)shift;  // Intentionally unreferenced parameter
-
-    static uint8_t phyIndex = NUM_PHY - 1;
-
-    if (keys & KEY_LEFT)
+    //state == BLE_STATE_CONNECTED &&
+    if (charHdl != 0 &&
+        procedureInProgress == FALSE)
     {
-      // If not connected
-      if (state == BLE_STATE_IDLE)
-      {
-        // If not currently scanning
-        if (!scanningStarted)
+        attWriteReq_t writeReq;
+        writeReq.pValue = GATT_bm_alloc(connHandle, ATT_WRITE_REQ, 2, NULL);
+        if (writeReq.pValue != NULL)
         {
-          // Increment index of current result.
-          scanIdx++;
+            writeReq.len = 2;
+            writeReq.pValue[0] = LO_UINT16(GATT_CLIENT_CFG_NOTIFY);
+            writeReq.pValue[1] = HI_UINT16(GATT_CLIENT_CFG_NOTIFY);
+            writeReq.sig = 0;
+            writeReq.cmd = 0;
 
-          // If there are no scanned devices
-          if (scanIdx >= scanRes)
-          {
-            // Prompt the user to begin scanning again.
-            scanIdx = -1;
-            Display_print0(dispHandle, 2, 0, "");
-            Display_print0(dispHandle, 3, 0, "");
-            Display_print0(dispHandle, 5, 0, "Discover ->");
-          }
-          else
-          {
-            // Display the indexed scanned device.
-            Display_print1(dispHandle, 2, 0, "Device %d", (scanIdx + 1));
-            Display_print0(dispHandle, 3, 0, Util_convertBdAddr2Str(devList[scanIdx].addr));
-            Display_print0(dispHandle, 5, 0, "Connect ->");
-            Display_print0(dispHandle, 6, 0, "<- Next Option");
-//            Util_rescheduleClock(&PWMperiodicClock, 1000);
-//            Util_startClock(&PWMperiodicClock);
-          }
+            writeReq.handle = GUA_CHAR4_CCC_Hdl;
+            my_RGB_set_colour(RGB_COLOUR_BLUE);
+
+            // Send the read request
+            if (GATT_WriteCharValue(connHandle, &writeReq, selfEntity) != SUCCESS)
+            {
+                GATT_bm_free((gattMsg_t *)&writeReq, ATT_WRITE_REQ);
+            }
         }
-      }
-      else if (state == BLE_STATE_CONNECTED)
-      {
-        keyPressConnOpt = (keyPressConnOpt == DISCONNECT) ? GATT_RW :
-                                            (keyPressConnOpt_t) (keyPressConnOpt + 1);
-
-        switch (keyPressConnOpt)
-        {
-          case GATT_RW:
-            Display_print0(dispHandle, 5, 0, "GATT Read/Write ->");
-//            Util_rescheduleClock(&PWMperiodicClock, 5000);
-//            Util_startClock(&PWMperiodicClock);
-            break;
-
-          case RSSI:
-            Display_print0(dispHandle, 5, 0, "Toggle Read RSSI ->");
-            break;
-
-          case CONN_UPDATE:
-            Display_print0(dispHandle, 5, 0, "Connection Update ->");
-            break;
-
-          case SET_PHY:
-            Display_print0(dispHandle, 5, 0, "Set PHY Preference ->");
-            break;
-
-          case GET_NOTIFY:
-              Display_print0(dispHandle, 5, 0, "Get Notify ->");
-              break;
-
-          case DISCONNECT:
-            Display_print0(dispHandle, 5, 0, "Disconnect ->");
-            break;
-
-          default:
-            break;
-        }
-
-        Display_print0(dispHandle, 6, 0, "<- Next Option");
-      }
-
-      return;
     }
 
-    if (keys & KEY_RIGHT)
-    {
-      if (state == BLE_STATE_IDLE)
-      {
-        if (scanIdx == -1)
-        {
-          if (!scanningStarted)
-          {
-            scanningStarted = TRUE;
-            scanRes = 0;
 
-            Display_print0(dispHandle, 2, 0, "Discovering...");
-            Display_print0(dispHandle, 3, 0, "");
-            Display_print0(dispHandle, 4, 0, "");
-            Display_print0(dispHandle, 5, 0, "");
-            Display_print0(dispHandle, 6, 0, "");
-
-            GAPCentralRole_StartDiscovery(DEFAULT_DISCOVERY_MODE,
-                                          DEFAULT_DISCOVERY_ACTIVE_SCAN,
-                                          DEFAULT_DISCOVERY_WHITE_LIST);
-//            Util_rescheduleClock(&PWMperiodicClock, 6000);
-//            Util_startClock(&PWMperiodicClock);
-          }
-        }
-        // Connect if there is a scan result
-        else
-        {
-          // connect to current device in scan result
-          uint8_t *peerAddr = devList[scanIdx].addr;
-          uint8_t addrType = devList[scanIdx].addrType;
-
-          state = BLE_STATE_CONNECTING;
-
-          GAPCentralRole_EstablishLink(DEFAULT_LINK_HIGH_DUTY_CYCLE,
-                                       DEFAULT_LINK_WHITE_LIST,
-                                       addrType, peerAddr);
-
-          Display_print0(dispHandle, 2, 0, "Connecting");
-          Display_print0(dispHandle, 3, 0, Util_convertBdAddr2Str(peerAddr));
-          Display_clearLine(dispHandle, 4);
-
-          // Forget the scan results.
-          scanRes = 0;
-          scanIdx = -1;
-
-//          Util_rescheduleClock(&PWMperiodicClock, 1000);
-//          Util_startClock(&PWMperiodicClock);
-        }
-      }
-      else if (state == BLE_STATE_CONNECTED)
-      {
-        switch (keyPressConnOpt)
-        {
-          case GATT_RW:
-            if (charHdl != 0 &&
-                procedureInProgress == FALSE)
-            {
-              uint8_t status;
-              {
-                // Do a read
-                attReadReq_t req;
-
-                req.handle = charHdl;
-                status = GATT_ReadCharValue(connHandle, &req, selfEntity);
-              }
-
-              if (status == SUCCESS)
-              {
-                procedureInProgress = TRUE;
-  //              doWrite = !doWrite;
-              }
-            }
-            break;
-
-          case RSSI:
-            // Start or cancel RSSI polling
-            if (SimpleBLECentral_RssiFind(connHandle) == NULL)
-            {
-              SimpleBLECentral_StartRssi(connHandle, DEFAULT_RSSI_PERIOD);
-            }
-            else
-            {
-              SimpleBLECentral_CancelRssi(connHandle);
-
-              Display_print0(dispHandle, 4, 0, "RSSI Cancelled");
-            }
-            break;
-
-          case CONN_UPDATE:
-             // Connection update
-            GAPCentralRole_UpdateLink(connHandle,
-                                      DEFAULT_UPDATE_MIN_CONN_INTERVAL,
-                                      DEFAULT_UPDATE_MAX_CONN_INTERVAL,
-                                      DEFAULT_UPDATE_SLAVE_LATENCY,
-                                      DEFAULT_UPDATE_CONN_TIMEOUT);
-            break;
-
-          case SET_PHY:
-            if (linkDB_Up(connHandle))
-            {
-              static uint8_t* phyName[] = {
-                "1 Mbps", "2 Mbps", "1 & 2 Mbps",
-
-    // Note: BLE_V50_FEATURES is always defined and long range phy (PHY_LR_CFG) is
-    //       defined in build_config.opt
-    #if (BLE_V50_FEATURES & PHY_LR_CFG)
-                "Coded:S2", "1 & 2 Mbps, & Coded:S2",
-    #endif  // PHY_LR_CFG
-              };
-              static uint8_t phy[] = {
-                HCI_PHY_1_MBPS, HCI_PHY_2_MBPS, HCI_PHY_1_MBPS | HCI_PHY_2_MBPS,
-
-    // Note: BLE_V50_FEATURES is always defined and long range phy (PHY_LR_CFG) is
-    //       defined in build_config.opt
-    // To use the long range phy, HCI_PHY_CODED needs to be included
-    #if (BLE_V50_FEATURES & PHY_LR_CFG)
-                HCI_PHY_CODED, HCI_PHY_1_MBPS | HCI_PHY_2_MBPS | HCI_PHY_CODED,
-    #endif  // PHY_LR_CFG
-              };
-
-              // Select different phy. 1M -> 2M -> 1&2M -> 1M -> 2M -> 1&2M -> ...
-              phyIndex = (phyIndex == NUM_PHY - 1) ? 0 : (phyIndex + 1);
-
-              Display_print1(dispHandle, 2, 0, "PHY preference: %s",
-                             phyName[phyIndex]);
-
-              Display_clearLine(dispHandle, 3);
-
-              // Set Phy Preference on the current connection. Apply the same value
-              // for RX and TX.
-              HCI_LE_SetPhyCmd(connHandle, 0, phy[phyIndex], phy[phyIndex], 0);
-            }
-            break;
-
-          case GET_NOTIFY:
-              if (charHdl != 0 &&
-                  procedureInProgress == FALSE)
-              {
-                  Display_clearLine(dispHandle, 4);
-                  attWriteReq_t writeReq;
-                  writeReq.pValue = GATT_bm_alloc(connHandle, ATT_WRITE_REQ, 2, NULL);
-                  if (writeReq.pValue != NULL)
-                  {
-                      writeReq.len = 2;
-                      writeReq.pValue[0] = LO_UINT16(GATT_CLIENT_CFG_NOTIFY);
-                      writeReq.pValue[1] = HI_UINT16(GATT_CLIENT_CFG_NOTIFY);
-                      writeReq.sig = 0;
-                      writeReq.cmd = 0;
-
-                      writeReq.handle = GUA_CHAR4_CCC_Hdl;
-
-                      // Send the read request
-                      if (GATT_WriteCharValue(connHandle, &writeReq, selfEntity) != SUCCESS)
-                      {
-                          GATT_bm_free((gattMsg_t *)&writeReq, ATT_WRITE_REQ);
-                      }
-                  }
-//                  Util_stopClock(&PWMperiodicClock);
-              }
-              break;
-
-          case DISCONNECT:
-            state = BLE_STATE_DISCONNECTING;
-
-            GAPCentralRole_TerminateLink(connHandle);
-
-            Display_print0(dispHandle, 2, 0, "Disconnecting");
-            Display_print0(dispHandle, 3, 0, "");
-            Display_print0(dispHandle, 4, 0, "");
-            Display_print0(dispHandle, 5, 0, "");
-
-            keyPressConnOpt = GATT_RW;
-            break;
-
-          default:
-            break;
-        }
-      }
-
-      return;
-    }
+//    (void)shift;  // Intentionally unreferenced parameter
+//
+//    static uint8_t phyIndex = NUM_PHY - 1;
+//
+//    if (keys & KEY_LEFT)
+//    {
+//      // If not connected
+//      if (state == BLE_STATE_IDLE)
+//      {
+//        // If not currently scanning
+//        if (!scanningStarted)
+//        {
+//          // Increment index of current result.
+//          scanIdx++;
+//
+//          // If there are no scanned devices
+//          if (scanIdx >= scanRes)
+//          {
+//            // Prompt the user to begin scanning again.
+//            scanIdx = -1;
+//            Display_print0(dispHandle, 2, 0, "");
+//            Display_print0(dispHandle, 3, 0, "");
+//            Display_print0(dispHandle, 5, 0, "Discover ->");
+//          }
+//          else
+//          {
+//            // Display the indexed scanned device.
+//            Display_print1(dispHandle, 2, 0, "Device %d", (scanIdx + 1));
+//            Display_print0(dispHandle, 3, 0, Util_convertBdAddr2Str(devList[scanIdx].addr));
+//            Display_print0(dispHandle, 5, 0, "Connect ->");
+//            Display_print0(dispHandle, 6, 0, "<- Next Option");
+//          }
+//        }
+//      }
+//      else if (state == BLE_STATE_CONNECTED)
+//      {
+//        keyPressConnOpt = (keyPressConnOpt == DISCONNECT) ? GATT_RW :
+//                                            (keyPressConnOpt_t) (keyPressConnOpt + 1);
+//
+//        switch (keyPressConnOpt)
+//        {
+//          case GATT_RW:
+//            Display_print0(dispHandle, 5, 0, "GATT Read/Write ->");
+//            break;
+//
+//          case RSSI:
+//            Display_print0(dispHandle, 5, 0, "Toggle Read RSSI ->");
+//            break;
+//
+//          case CONN_UPDATE:
+//            Display_print0(dispHandle, 5, 0, "Connection Update ->");
+//            break;
+//
+//          case SET_PHY:
+//            Display_print0(dispHandle, 5, 0, "Set PHY Preference ->");
+//            break;
+//
+//          case GET_NOTIFY:
+//              Display_print0(dispHandle, 5, 0, "Get Notify ->");
+//              break;
+//
+//          case DISCONNECT:
+//            Display_print0(dispHandle, 5, 0, "Disconnect ->");
+//            break;
+//
+//          default:
+//            break;
+//        }
+//
+//        Display_print0(dispHandle, 6, 0, "<- Next Option");
+//      }
+//
+//      return;
+//    }
+//
+//    if (keys & KEY_RIGHT)
+//    {
+//      if (state == BLE_STATE_IDLE)
+//      {
+//        if (scanIdx == -1)
+//        {
+//          if (!scanningStarted)
+//          {
+//            scanningStarted = TRUE;
+//            scanRes = 0;
+//
+//            Display_print0(dispHandle, 2, 0, "Discovering...");
+//            Display_print0(dispHandle, 3, 0, "");
+//            Display_print0(dispHandle, 4, 0, "");
+//            Display_print0(dispHandle, 5, 0, "");
+//            Display_print0(dispHandle, 6, 0, "");
+//
+//            GAPCentralRole_StartDiscovery(DEFAULT_DISCOVERY_MODE,
+//                                          DEFAULT_DISCOVERY_ACTIVE_SCAN,
+//                                          DEFAULT_DISCOVERY_WHITE_LIST);
+//          }
+//        }
+//        // Connect if there is a scan result
+//        else
+//        {
+//          // connect to current device in scan result
+//          uint8_t *peerAddr = devList[scanIdx].addr;
+//          uint8_t addrType = devList[scanIdx].addrType;
+//
+//          state = BLE_STATE_CONNECTING;
+//
+//          GAPCentralRole_EstablishLink(DEFAULT_LINK_HIGH_DUTY_CYCLE,
+//                                       DEFAULT_LINK_WHITE_LIST,
+//                                       addrType, peerAddr);
+//
+//          Display_print0(dispHandle, 2, 0, "Connecting");
+//          Display_print0(dispHandle, 3, 0, Util_convertBdAddr2Str(peerAddr));
+//          Display_clearLine(dispHandle, 4);
+//
+//          // Forget the scan results.
+//          scanRes = 0;
+//          scanIdx = -1;
+//        }
+//      }
+//      else if (state == BLE_STATE_CONNECTED)
+//      {
+//        switch (keyPressConnOpt)
+//        {
+//          case GATT_RW:
+//            if (charHdl != 0 &&
+//                procedureInProgress == FALSE)
+//            {
+//              uint8_t status;
+//              {
+//                // Do a read
+//                attReadReq_t req;
+//
+//                req.handle = charHdl;
+//                status = GATT_ReadCharValue(connHandle, &req, selfEntity);
+//              }
+//
+//              if (status == SUCCESS)
+//              {
+//                procedureInProgress = TRUE;
+//  //              doWrite = !doWrite;
+//              }
+//            }
+//            break;
+//
+//          case RSSI:
+//            // Start or cancel RSSI polling
+//            if (SimpleBLECentral_RssiFind(connHandle) == NULL)
+//            {
+//              SimpleBLECentral_StartRssi(connHandle, DEFAULT_RSSI_PERIOD);
+//            }
+//            else
+//            {
+//              SimpleBLECentral_CancelRssi(connHandle);
+//
+//              Display_print0(dispHandle, 4, 0, "RSSI Cancelled");
+//            }
+//            break;
+//
+//          case CONN_UPDATE:
+//             // Connection update
+//            GAPCentralRole_UpdateLink(connHandle,
+//                                      DEFAULT_UPDATE_MIN_CONN_INTERVAL,
+//                                      DEFAULT_UPDATE_MAX_CONN_INTERVAL,
+//                                      DEFAULT_UPDATE_SLAVE_LATENCY,
+//                                      DEFAULT_UPDATE_CONN_TIMEOUT);
+//            break;
+//
+//          case SET_PHY:
+//            if (linkDB_Up(connHandle))
+//            {
+//              static uint8_t* phyName[] = {
+//                "1 Mbps", "2 Mbps", "1 & 2 Mbps",
+//
+//    // Note: BLE_V50_FEATURES is always defined and long range phy (PHY_LR_CFG) is
+//    //       defined in build_config.opt
+//    #if (BLE_V50_FEATURES & PHY_LR_CFG)
+//                "Coded:S2", "1 & 2 Mbps, & Coded:S2",
+//    #endif  // PHY_LR_CFG
+//              };
+//              static uint8_t phy[] = {
+//                HCI_PHY_1_MBPS, HCI_PHY_2_MBPS, HCI_PHY_1_MBPS | HCI_PHY_2_MBPS,
+//
+//    // Note: BLE_V50_FEATURES is always defined and long range phy (PHY_LR_CFG) is
+//    //       defined in build_config.opt
+//    // To use the long range phy, HCI_PHY_CODED needs to be included
+//    #if (BLE_V50_FEATURES & PHY_LR_CFG)
+//                HCI_PHY_CODED, HCI_PHY_1_MBPS | HCI_PHY_2_MBPS | HCI_PHY_CODED,
+//    #endif  // PHY_LR_CFG
+//              };
+//
+//              // Select different phy. 1M -> 2M -> 1&2M -> 1M -> 2M -> 1&2M -> ...
+//              phyIndex = (phyIndex == NUM_PHY - 1) ? 0 : (phyIndex + 1);
+//
+//              Display_print1(dispHandle, 2, 0, "PHY preference: %s",
+//                             phyName[phyIndex]);
+//
+//              Display_clearLine(dispHandle, 3);
+//
+//              // Set Phy Preference on the current connection. Apply the same value
+//              // for RX and TX.
+//              HCI_LE_SetPhyCmd(connHandle, 0, phy[phyIndex], phy[phyIndex], 0);
+//            }
+//            break;
+//
+//          case GET_NOTIFY:
+//              if (charHdl != 0 &&
+//                  procedureInProgress == FALSE)
+//              {
+//                  Display_clearLine(dispHandle, 4);
+//                  attWriteReq_t writeReq;
+//                  writeReq.pValue = GATT_bm_alloc(connHandle, ATT_WRITE_REQ, 2, NULL);
+//                  if (writeReq.pValue != NULL)
+//                  {
+//                      writeReq.len = 2;
+//                      writeReq.pValue[0] = LO_UINT16(GATT_CLIENT_CFG_NOTIFY);
+//                      writeReq.pValue[1] = HI_UINT16(GATT_CLIENT_CFG_NOTIFY);
+//                      writeReq.sig = 0;
+//                      writeReq.cmd = 0;
+//
+//                      writeReq.handle = GUA_CHAR4_CCC_Hdl;
+//
+//                      // Send the read request
+//                      if (GATT_WriteCharValue(connHandle, &writeReq, selfEntity) != SUCCESS)
+//                      {
+//                          GATT_bm_free((gattMsg_t *)&writeReq, ATT_WRITE_REQ);
+//                      }
+//                  }
+//              }
+//              break;
+//
+//          case DISCONNECT:
+//            state = BLE_STATE_DISCONNECTING;
+//
+//            GAPCentralRole_TerminateLink(connHandle);
+//
+//            Display_print0(dispHandle, 2, 0, "Disconnecting");
+//            Display_print0(dispHandle, 3, 0, "");
+//            Display_print0(dispHandle, 4, 0, "");
+//            Display_print0(dispHandle, 5, 0, "");
+//
+//            keyPressConnOpt = GATT_RW;
+//            break;
+//
+//          default:
+//            break;
+//        }
+//      }
+//
+//      return;
+//    }
 }
 
 /*********************************************************************
@@ -1738,6 +1752,7 @@ static void SimpleBLECentral_startDiscovery(void)
  */
 static void SimpleBLECentral_processGATTDiscEvent(gattMsgEvent_t *pMsg)
 {
+    my_RGB_set_colour(RGB_COLOUR_WHITE);
   if (discState == BLE_DISC_STATE_MTU)
   {
     // MTU size response received, discover simple service
@@ -1801,6 +1816,12 @@ static void SimpleBLECentral_processGATTDiscEvent(gattMsgEvent_t *pMsg)
       Display_print0(dispHandle, 2, 0, "Simple Svc Found");
       procedureInProgress = FALSE;
     }
+
+
+    Util_constructClock(&PWMperiodicClock, SimpleBLECentral_keyChangeHandler,
+                        2000, 0, false, 0);
+    Util_startClock(&PWMperiodicClock);
+
 
     discState = BLE_DISC_STATE_IDLE;
   }
