@@ -16,6 +16,6 @@
 extern int8_t my_RGB_init(void);
 int8_t my_RGB_set_colour(uint32_t RGB_colour_code);
 uint32_t my_RGB_get_colour(void);
-void my_RGB_flash(void);
+void my_RGB_flash(uint32_t colour_code);
 
 #endif

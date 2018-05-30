@@ -145,9 +145,11 @@ uint32_t my_RGB_get_colour(void)
     return g_RGB_colour_code;
 }
 
-void my_RGB_flash(void)
+void my_RGB_flash(uint32_t colour_code)
 {
     static uint8_t flash_flag = 0;
+
+    g_RGB_colour_code = colour_code;
 
     flash_flag = ~flash_flag;
     if(flash_flag == 0)
