@@ -11,7 +11,7 @@ ADC_Handle adc;
 uint16_t adc_value = 0;
 uint32_t micro_volt = 0;
 
-int8_t My_Battery_init(void)
+int8_t my_battery_init(void)
 {
     ADC_Params params;
     ADC_init();
@@ -26,7 +26,7 @@ int8_t My_Battery_init(void)
     return 0;
 }
 
-int32_t My_Battery_Get_Voltage(ADC_Handle ADCn)
+int32_t my_battery_get_voltage(ADC_Handle ADCn)
 {
     int_fast16_t res;
     uint16_t adcValue;
