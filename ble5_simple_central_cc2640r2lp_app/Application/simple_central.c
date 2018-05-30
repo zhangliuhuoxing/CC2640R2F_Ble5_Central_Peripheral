@@ -81,8 +81,8 @@
 
 // My code
 #include <My_RGB.h>
-#include <My_Motor.h>
 #include <My_Battery.h>
+#include <My_Accelerator.h>
 // My code
 
 /*********************************************************************
@@ -143,7 +143,7 @@
 
 // After the connection is formed, the central will accept connection parameter
 // update requests from the peripheral
-#define DEFAULT_ENABLE_UPDATE_REQUEST         GAPCENTRALROLE_PARAM_UPDATE_REQ_AUTO_ACCEPT
+#define DEFAULT_ENABLE_UPDATE_REQUEST         GAPCENTRALROLE_PARAM_UPDATE_REQ_AUTO_REJECT
 
 // Minimum connection interval (units of 1.25ms) if automatic parameter update
 // request is enabled
@@ -151,7 +151,7 @@
 
 // Maximum connection interval (units of 1.25ms) if automatic parameter update
 // request is enabled
-#define DEFAULT_UPDATE_MAX_CONN_INTERVAL      80
+#define DEFAULT_UPDATE_MAX_CONN_INTERVAL      8
 
 // Slave latency to use if automatic parameter update request is enabled
 #define DEFAULT_UPDATE_SLAVE_LATENCY          0
@@ -213,6 +213,40 @@
 
 #define GUA_CHAR4_Hdl                           0x29   //char4µÄ¾ä±ú
 #define GUA_CHAR4_CCC_Hdl                       0x2A   //char4µÄCCCµÄ¾ä±ú
+
+
+#define MY_PROCESS_EVT              Event_Id_29     //My process
+#define MY_ALL_EVENTS               MY_PROCESS_EVT  //
+
+#define MY_PROCESS_EVT_PERIOD       5              //10ms
+
+typedef enum _CONNECT_STATE_ {
+    MY_CONNECT = 0,
+    MY_DISCONNECT,
+    MY_ERROR
+} CONNECT_STATE;
+
+typedef struct
+{
+  CONNECT_STATE connect_state;
+  uint32_t update_count;
+  uint8_t data_update_flag;
+} My_Task_Data;
+
+My_Task_Data my_task_data =
+{
+     .connect_state = MY_DISCONNECT,
+     .update_count  = 0,
+     .data_update_flag = 0
+};
+
+static uint8_t KeyCount = 0;
+static Clock_Struct my_process_periodicClock;
+
+static void SimpleBLECentral_AutoConnect(uint8_t shift, uint8_t keys);
+static void my_process_periodic_task(void);
+static void my_process_handler(UArg a0);
+
 //My code
 
 // Application states
@@ -293,18 +327,9 @@ static Clock_Struct startDiscClock;
 static Queue_Struct appMsg;
 static Queue_Handle appMsgQueue;
 
-// My code
-
-// My code
-
 // Task configuration
 Task_Struct sbcTask;
 Char sbcTaskStack[SBC_TASK_STACK_SIZE];
-
-// My code
-static Clock_Struct PWMperiodicClock;
-static uint8_t KeyCount = 0;
-// My code
 
 // GAP GATT Attributes
 static const uint8_t attDeviceName[GAP_DEVICE_NAME_LEN] = "Simple Central";
@@ -358,10 +383,6 @@ static keyPressConnOpt_t keyPressConnOpt = DISCONNECT;
  */
 static void SimpleBLECentral_init(void);
 static void SimpleBLECentral_taskFxn(UArg a0, UArg a1);
-
-// My code
-static void SimpleBLECentral_AutoConnect(uint8_t shift, uint8_t keys);
-// My code
 
 static void SimpleBLECentral_processGATTMsg(gattMsgEvent_t *pMsg);
 static void SimpleBLECentral_processStackMsg(ICall_Hdr *pMsg);
@@ -673,12 +694,16 @@ static void SimpleBLECentral_init(void)
   // My code
   HCI_EXT_SetTxPowerCmd(HCI_EXT_TX_POWER_5_DBM);
 
-  My_Battery_init();
+  my_battery_init();
 
-  my_Motor_init();
+  my_accelerator_init();
+
   my_RGB_init();
 
-  my_RGB_set_colour(RGB_COLOUR_RED);
+  Util_constructClock(&my_process_periodicClock, my_process_handler,
+                      MY_PROCESS_EVT_PERIOD, 0, false,
+                      MY_PROCESS_EVT);
+  Util_startClock(&my_process_periodicClock);
   // My code
 }
 
@@ -701,7 +726,7 @@ static void SimpleBLECentral_taskFxn(UArg a0, UArg a1)
   {
     uint32_t events;
 
-    events = Event_pend(syncEvent, Event_Id_NONE, SBC_ALL_EVENTS,
+    events = Event_pend(syncEvent, Event_Id_NONE, SBC_ALL_EVENTS | MY_ALL_EVENTS,
                         ICALL_TIMEOUT_FOREVER);
 
     if (events)
@@ -750,6 +775,13 @@ static void SimpleBLECentral_taskFxn(UArg a0, UArg a1)
         SimpleBLECentral_startDiscovery();
       }
       //No maintenance required
+
+      //My events
+      if (events & MY_PROCESS_EVT)
+      {
+          Util_startClock(&my_process_periodicClock);
+          my_process_periodic_task();
+      }
     }
   }
 }
@@ -990,7 +1022,13 @@ static void SimpleBLECentral_processRoleEvent(gapCentralRoleEvent_t *pEvent)
             Util_startClock(&startDiscClock);
           }
 
-          my_RGB_set_colour(RGB_COLOUR_GREEN);
+          GAPCentralRole_UpdateLink(connHandle,
+                                    DEFAULT_UPDATE_MIN_CONN_INTERVAL,
+                                    DEFAULT_UPDATE_MAX_CONN_INTERVAL,
+                                    DEFAULT_UPDATE_SLAVE_LATENCY,
+                                    DEFAULT_UPDATE_CONN_TIMEOUT);
+
+          my_task_data.connect_state = MY_CONNECT;
 
           Display_print0(dispHandle, 2, 0, "Connected");
           Display_print0(dispHandle, 3, 0, Util_convertBdAddr2Str(pEvent->linkCmpl.devAddr));
@@ -1006,6 +1044,8 @@ static void SimpleBLECentral_processRoleEvent(gapCentralRoleEvent_t *pEvent)
 
           Display_print0(dispHandle, 2, 0, "Connect Failed");
           Display_print1(dispHandle, 3, 0, "Reason: %d", pEvent->gap.hdr.status);
+
+          my_task_data.connect_state = MY_DISCONNECT;
         }
       }
       break;
@@ -1030,6 +1070,8 @@ static void SimpleBLECentral_processRoleEvent(gapCentralRoleEvent_t *pEvent)
 
         // Prompt user to begin scanning.
         Display_print0(dispHandle, 5, 0, "Discover ->");
+
+        my_task_data.connect_state = MY_DISCONNECT;
       }
       break;
 
@@ -1046,32 +1088,6 @@ static void SimpleBLECentral_processRoleEvent(gapCentralRoleEvent_t *pEvent)
 
 static void SimpleBLECentral_AutoConnect(uint8_t shift, uint8_t keys)
 {
-    //state == BLE_STATE_CONNECTED &&
-    if (charHdl != 0 &&
-        procedureInProgress == FALSE)
-    {
-        attWriteReq_t writeReq;
-        writeReq.pValue = GATT_bm_alloc(connHandle, ATT_WRITE_REQ, 2, NULL);
-        if (writeReq.pValue != NULL)
-        {
-            writeReq.len = 2;
-            writeReq.pValue[0] = LO_UINT16(GATT_CLIENT_CFG_NOTIFY);
-            writeReq.pValue[1] = HI_UINT16(GATT_CLIENT_CFG_NOTIFY);
-            writeReq.sig = 0;
-            writeReq.cmd = 0;
-
-            writeReq.handle = GUA_CHAR4_CCC_Hdl;
-            my_RGB_set_colour(RGB_COLOUR_BLUE);
-
-            // Send the read request
-            if (GATT_WriteCharValue(connHandle, &writeReq, selfEntity) != SUCCESS)
-            {
-                GATT_bm_free((gattMsg_t *)&writeReq, ATT_WRITE_REQ);
-            }
-        }
-    }
-
-
 //    (void)shift;  // Intentionally unreferenced parameter
 //
 //    static uint8_t phyIndex = NUM_PHY - 1;
@@ -1405,43 +1421,7 @@ static void SimpleBLECentral_processGATTMsg(gattMsgEvent_t *pMsg)
     {
       if( pMsg->msg.handleValueNoti.handle == GUA_CHAR4_Hdl)     //CHAR4's notify
       {
-          uint8_t NotifyPackages[5] = {0};
-          float PWM0Duty = PWM_MIX_DUTY;    //40% ~ 80% (0.4 ~ 0.8) , FRE = 400hz
-          uint8_t XORValue = 0;
-          uint16_t SpeedValue = 0;
 
-          //Copy notify date
-          memcpy(NotifyPackages, pMsg->msg.handleValueNoti.pValue, pMsg->msg.handleValueNoti.len);
-
-          if(NotifyPackages[0] == PACKAGE_HEAD && NotifyPackages[1] == PACKAGE_TYPE)
-          {
-              //XOR cheak
-              for(uint8_t i = 0; i < 4; i++)
-              {
-                  XORValue ^= NotifyPackages[i];
-              }
-
-              my_RGB_flash();
-              adc_value = My_Battery_Get_Voltage(adc);
-              micro_volt = ADC_convertToMicroVolts(adc, adc_value);
-
-              if(XORValue == NotifyPackages[4])
-              {
-                  SpeedValue = *(uint16_t *)(&NotifyPackages[2]);
-                  PWM0Duty = SpeedValue * 1.0 / 10000;
-
-                  PWM0Duty = PWM_MIX_DUTY + PWM_MIX_DUTY * PWM0Duty;
-
-                  if(PWM0Duty > PWM_MIX_DUTY && PWM0Duty < PWM_MAX_DUTY)
-                  {
-                      PWM_setDuty(gPWM0, (PWM_DUTY_FRACTION_MAX * PWM0Duty));
-                  }
-              }
-          }
-
-          static uint32_t test_count = 0;
-          Display_print1(dispHandle, 15, 0, "Count: %d", test_count++);
-          Display_print1(dispHandle, 16, 0, "KeyCount: %d", KeyCount);
       }
     }
     //My code
@@ -1752,7 +1732,6 @@ static void SimpleBLECentral_startDiscovery(void)
  */
 static void SimpleBLECentral_processGATTDiscEvent(gattMsgEvent_t *pMsg)
 {
-    my_RGB_set_colour(RGB_COLOUR_WHITE);
   if (discState == BLE_DISC_STATE_MTU)
   {
     // MTU size response received, discover simple service
@@ -1816,12 +1795,6 @@ static void SimpleBLECentral_processGATTDiscEvent(gattMsgEvent_t *pMsg)
       Display_print0(dispHandle, 2, 0, "Simple Svc Found");
       procedureInProgress = FALSE;
     }
-
-
-    Util_constructClock(&PWMperiodicClock, SimpleBLECentral_keyChangeHandler,
-                        2000, 0, false, 0);
-    Util_startClock(&PWMperiodicClock);
-
 
     discState = BLE_DISC_STATE_IDLE;
   }
@@ -2090,5 +2063,107 @@ static uint8_t SimpleBLECentral_enqueueMsg(uint8_t event, uint8_t state,
   return FALSE;
 }
 
+static void my_process_handler(UArg a0)
+{
+    Event_post(syncEvent, a0);
+}
+
+static void my_process_periodic_task(void)
+{
+    static uint32_t temp_count = 0;
+    float SpeedValue = 0;
+    uint16_t accelerator_value = 0;
+
+    static uint8_t update_flag = 0;
+
+
+    if(my_task_data.connect_state == MY_DISCONNECT)
+    {
+        temp_count++;
+        if(temp_count > 50)
+        {
+            temp_count = 0;
+            my_RGB_flash(RGB_COLOUR_BLUE);
+        }
+    }
+    else if(my_task_data.connect_state == MY_CONNECT)
+    {
+        temp_count++;
+        if(temp_count > 1)
+        {
+            temp_count = 0;
+        }
+
+        if(update_flag == 0)
+        {
+            update_flag = 1;
+
+
+        }
+
+        if (charHdl != 0 &&
+            procedureInProgress == FALSE)
+        {
+            uint8_t status;
+
+            // Do a write as long as no other read or write is in progress
+            attWriteReq_t req;
+            req.pValue = GATT_bm_alloc(connHandle, ATT_WRITE_REQ, 5, NULL);
+
+            if ( req.pValue != NULL )
+            {
+                my_RGB_flash(RGB_COLOUR_GREEN);
+                fre_count++;
+
+                accelerator_value = my_accelerator_get(accelerator_adc);
+                temp_accelerator_value = accelerator_value;
+
+                SpeedValue = (accelerator_value - 770) * 1.0 / (2339 - 770);
+                accelerator_value = SpeedValue * 10000;
+
+                uint8_t char1_value[5] = { 0xa5, 0x01, 0, 0, 0 };
+                *(uint16_t *)(&char1_value[2]) = accelerator_value;
+
+                char1_value[4] = 0;
+                for(uint8_t i = 0; i < 4; i++)
+                {
+                    char1_value[4] ^=  char1_value[i];
+                }
+
+                req.handle = charHdl;
+                req.len = 5;
+                req.pValue[0] = char1_value[0];
+                req.pValue[1] = char1_value[1];
+                req.pValue[2] = char1_value[2];
+                req.pValue[3] = char1_value[3];
+                req.pValue[4] = char1_value[4];
+                req.sig = 0;
+                req.cmd = 0;
+
+                status = GATT_WriteCharValue(connHandle, &req, selfEntity);
+                if ( status != SUCCESS )
+                {
+                    GATT_bm_free((gattMsg_t *)&req, ATT_WRITE_REQ);
+                }
+            }
+            else
+            {
+                status = bleMemAllocError;
+            }
+
+            if (status == SUCCESS)
+            {
+                procedureInProgress = TRUE;
+            }
+
+    }
+
+    }
+    else
+    {
+
+    }
+
+}
 /*********************************************************************
 *********************************************************************/
