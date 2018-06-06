@@ -120,6 +120,7 @@ extern const PIN_Config BoardGpioInitTable[];
 #define CC2640R2_4XS_DIO07_ANALOG          PIN_UNASSIGNED
 #define CC2640R2_4XS_DIO08_ANALOG          IOID_8
 #define CC2640R2_4XS_DIO09_ANALOG          IOID_9
+#define CC2640R2_7XS_DIO23_ANALOG          IOID_23          //
 
 /* Button Board */
 #define CC2640R2DK_4XS_KEY_SELECT                    PIN_UNASSIGNED        	/* P1.14 */

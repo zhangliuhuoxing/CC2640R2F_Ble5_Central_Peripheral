@@ -132,7 +132,7 @@ ADCCC26XX_Object adcCC26xxObjects[CC2640R2_4XS_ADCCOUNT];
 
 const ADCCC26XX_HWAttrs adcCC26xxHWAttrs[CC2640R2_4XS_ADCCOUNT] = {
     {
-        .adcDIO              = PIN_UNASSIGNED,
+        .adcDIO              = CC2640R2_7XS_DIO23_ANALOG,
         .adcCompBInput       = ADC_COMPB_IN_AUXIO7,
         .refSource           = ADCCC26XX_FIXED_REFERENCE,
         .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_2P7_US,
