@@ -8,8 +8,9 @@
 
 
 ADC_Handle accelerator_adc;
-uint16_t temp_accelerator_value = 0;
+uint16_t temp_accelerator_value1 = 0, temp_accelerator_value2 = 0;
 uint32_t fre_count = 0;
+float test_pwm_percent = 0.0f;
 
 int8_t my_accelerator_init(void)
 {
@@ -17,7 +18,8 @@ int8_t my_accelerator_init(void)
     ADC_init();
     ADC_Params_init(&params);
     accelerator_adc = ADC_open(ACCELERATOR_ADC, &params); //Board_ADCCHANNEL_A0
-    if (accelerator_adc == NULL) {
+    if (accelerator_adc == NULL)
+    {
         // ADC_open() failed
         return -1;
     }

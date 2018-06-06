@@ -83,6 +83,7 @@
 #include <My_RGB.h>
 #include <My_Battery.h>
 #include <My_Accelerator.h>
+#include <My_Filter.h>
 // My code
 
 /*********************************************************************
@@ -143,7 +144,7 @@
 
 // After the connection is formed, the central will accept connection parameter
 // update requests from the peripheral
-#define DEFAULT_ENABLE_UPDATE_REQUEST         GAPCENTRALROLE_PARAM_UPDATE_REQ_AUTO_REJECT
+#define DEFAULT_ENABLE_UPDATE_REQUEST         GAPCENTRALROLE_PARAM_UPDATE_REQ_AUTO_REJECT  //
 
 // Minimum connection interval (units of 1.25ms) if automatic parameter update
 // request is enabled
@@ -207,6 +208,7 @@
 //My code
 //10ms
 #define PWM_TIMER_PERIOD                      10
+#define ACCELERATOR_MAX_VALUE                 2339
 
 #define GATT_CLIENT_CFG_NOTIFY                  0x0001 //打开notify开关的数值
 #define GATT_CLIENT_CFG_INDICATE                0x0002 //打开indicate开关的数值
@@ -216,9 +218,11 @@
 
 
 #define MY_PROCESS_EVT              Event_Id_29     //My process
-#define MY_ALL_EVENTS               MY_PROCESS_EVT  //
+#define MY_RECONNECT_EVT            Event_Id_28     //Reconnect event
+#define MY_ALL_EVENTS               (MY_PROCESS_EVT | MY_RECONNECT_EVT)
 
-#define MY_PROCESS_EVT_PERIOD       5              //10ms
+#define MY_PROCESS_EVT_PERIOD       5       //5ms
+#define MY_RECONNECT_EVT_PERIOD     6000    //6000ms
 
 typedef enum _CONNECT_STATE_ {
     MY_CONNECT = 0,
@@ -240,12 +244,19 @@ My_Task_Data my_task_data =
      .data_update_flag = 0
 };
 
+static uint16_t accelerator_offset_value = 0;
+
 static uint8_t KeyCount = 0;
 static Clock_Struct my_process_periodicClock;
+static Clock_Struct my_reconnect_Clock;
 
 static void SimpleBLECentral_AutoConnect(uint8_t shift, uint8_t keys);
+
 static void my_process_periodic_task(void);
 static void my_process_handler(UArg a0);
+
+static void my_reconnect_task(void);
+static void my_reconnect_handler(UArg a0);
 
 //My code
 
@@ -704,6 +715,11 @@ static void SimpleBLECentral_init(void)
                       MY_PROCESS_EVT_PERIOD, 0, false,
                       MY_PROCESS_EVT);
   Util_startClock(&my_process_periodicClock);
+
+  Util_constructClock(&my_reconnect_Clock, my_reconnect_handler,
+                      MY_RECONNECT_EVT_PERIOD, 0, false,
+                      MY_RECONNECT_EVT);
+  Util_startClock(&my_reconnect_Clock);
   // My code
 }
 
@@ -776,11 +792,16 @@ static void SimpleBLECentral_taskFxn(UArg a0, UArg a1)
       }
       //No maintenance required
 
-      //My events
+      //Main process event
       if (events & MY_PROCESS_EVT)
       {
-          Util_startClock(&my_process_periodicClock);
           my_process_periodic_task();
+      }
+
+      //Reconnect event
+      if (events & MY_RECONNECT_EVT)
+      {
+          my_reconnect_task();
       }
     }
   }
@@ -989,6 +1010,8 @@ static void SimpleBLECentral_processRoleEvent(gapCentralRoleEvent_t *pEvent)
 
         Display_print1(dispHandle, 2, 0, "Devices Found %d", scanRes);
 
+        scanIdx = scanRes;
+
         if (scanRes > 0)
         {
 #ifndef FPGA_AUTO_CONNECT
@@ -1002,7 +1025,7 @@ static void SimpleBLECentral_processRoleEvent(gapCentralRoleEvent_t *pEvent)
         Display_print0(dispHandle, 5, 0, "Discover ->");
 
 #else // FPGA_AUTO_CONNECT
-          SimpleBLECentral_connectToFirstDevice();
+//          SimpleBLECentral_connectToFirstDevice();
         }
 #endif // FPGA_AUTO_CONNECT
       }
@@ -1022,6 +1045,7 @@ static void SimpleBLECentral_processRoleEvent(gapCentralRoleEvent_t *pEvent)
             Util_startClock(&startDiscClock);
           }
 
+          //Update connect parameter
           GAPCentralRole_UpdateLink(connHandle,
                                     DEFAULT_UPDATE_MIN_CONN_INTERVAL,
                                     DEFAULT_UPDATE_MAX_CONN_INTERVAL,
@@ -1072,6 +1096,9 @@ static void SimpleBLECentral_processRoleEvent(gapCentralRoleEvent_t *pEvent)
         Display_print0(dispHandle, 5, 0, "Discover ->");
 
         my_task_data.connect_state = MY_DISCONNECT;
+
+        scanRes = 0;
+        Util_startClock(&my_reconnect_Clock);
       }
       break;
 
@@ -2063,19 +2090,50 @@ static uint8_t SimpleBLECentral_enqueueMsg(uint8_t event, uint8_t state,
   return FALSE;
 }
 
+static void my_reconnect_handler(UArg a0)
+{
+    Event_post(syncEvent, a0);
+}
+
 static void my_process_handler(UArg a0)
 {
     Event_post(syncEvent, a0);
 }
 
+static void my_reconnect_task(void)
+{
+    if(state != BLE_STATE_CONNECTED)
+    {
+        if(scanningStarted == FALSE)
+        {
+            if(scanRes > 0)
+            {
+                SimpleBLECentral_connectToFirstDevice();
+                return;
+            }
+
+            {
+                scanningStarted = TRUE;
+                scanRes = 0;
+
+                GAPCentralRole_StartDiscovery(DEFAULT_DISCOVERY_MODE,
+                                              DEFAULT_DISCOVERY_ACTIVE_SCAN,
+                                              DEFAULT_DISCOVERY_WHITE_LIST);
+                Util_startClock(&my_reconnect_Clock);
+            }
+        }
+    }
+}
+
 static void my_process_periodic_task(void)
 {
+    Util_startClock(&my_process_periodicClock);
     static uint32_t temp_count = 0;
     float SpeedValue = 0;
-    uint16_t accelerator_value = 0;
-
+    uint16_t accelerator_value = 0, last_accelerator_value = 0;
     static uint8_t update_flag = 0;
-
+    static uint8_t get_offset_count = 0;
+    static uint32_t sum_offset = 0;
 
     if(my_task_data.connect_state == MY_DISCONNECT)
     {
@@ -2085,20 +2143,39 @@ static void my_process_periodic_task(void)
             temp_count = 0;
             my_RGB_flash(RGB_COLOUR_BLUE);
         }
+
+        if(get_offset_count < 20)
+        {
+            sum_offset += my_accelerator_get(accelerator_adc);
+            get_offset_count++;
+        }
+
+        accelerator_offset_value = sum_offset / get_offset_count;
+        accelerator_offset_value = 840;
+        temp_accelerator_value2 = accelerator_offset_value;
     }
     else if(my_task_data.connect_state == MY_CONNECT)
     {
         temp_count++;
-        if(temp_count > 1)
+        if(temp_count > 0)
         {
             temp_count = 0;
         }
 
+        accelerator_value = my_accelerator_get(accelerator_adc);
+        if(accelerator_value < accelerator_offset_value)
+        {
+            accelerator_value = accelerator_offset_value;
+        }
+        else if(accelerator_value > ACCELERATOR_MAX_VALUE)
+        {
+            accelerator_value = ACCELERATOR_MAX_VALUE;
+        }
+        temp_accelerator_value1 = accelerator_value;
+
         if(update_flag == 0)
         {
             update_flag = 1;
-
-
         }
 
         if (charHdl != 0 &&
@@ -2115,10 +2192,9 @@ static void my_process_periodic_task(void)
                 my_RGB_flash(RGB_COLOUR_GREEN);
                 fre_count++;
 
-                accelerator_value = my_accelerator_get(accelerator_adc);
-                temp_accelerator_value = accelerator_value;
-
-                SpeedValue = (accelerator_value - 770) * 1.0 / (2339 - 770);
+                SpeedValue = (float)(accelerator_value - accelerator_offset_value)
+                              / (float)(ACCELERATOR_MAX_VALUE - accelerator_offset_value);
+                test_pwm_percent = SpeedValue;
                 accelerator_value = SpeedValue * 10000;
 
                 uint8_t char1_value[5] = { 0xa5, 0x01, 0, 0, 0 };
@@ -2155,9 +2231,7 @@ static void my_process_periodic_task(void)
             {
                 procedureInProgress = TRUE;
             }
-
-    }
-
+        }
     }
     else
     {
