@@ -11,6 +11,7 @@ ADC_Handle accelerator_adc;
 uint16_t temp_accelerator_value1 = 0, temp_accelerator_value2 = 0;
 uint32_t fre_count = 0;
 float test_pwm_percent = 0.0f;
+uint8_t global_get_data[31] = {0};
 
 int8_t my_accelerator_init(void)
 {

@@ -258,6 +258,8 @@ static void my_process_handler(UArg a0);
 static void my_reconnect_task(void);
 static void my_reconnect_handler(UArg a0);
 
+static bool my_get_ad_type_data( uint8_t ad_type, uint8 *p_data, uint8_t data_len, uint8_t *ad_type_data_index, uint8_t *ad_type_data_len);
+
 //My code
 
 // Application states
@@ -704,6 +706,7 @@ static void SimpleBLECentral_init(void)
 
   // My code
   HCI_EXT_SetTxPowerCmd(HCI_EXT_TX_POWER_5_DBM);
+  HCI_EXT_SetRxGainCmd(HCI_EXT_RX_GAIN_HIGH);
 
   my_battery_init();
 
@@ -981,16 +984,49 @@ static void SimpleBLECentral_processRoleEvent(gapCentralRoleEvent_t *pEvent)
     case GAP_DEVICE_INFO_EVENT:
       {
         // if filtering device discovery results based on service UUID
-        if (DEFAULT_DEV_DISC_BY_SVC_UUID == TRUE)
-        {
-          if (SimpleBLECentral_findSvcUuid(SIMPLEPROFILE_SERV_UUID,
-                                           pEvent->deviceInfo.pEvtData,
-                                           pEvent->deviceInfo.dataLen))
+//        if (DEFAULT_DEV_DISC_BY_SVC_UUID == TRUE)
+//        {
+//          if (SimpleBLECentral_findSvcUuid(SIMPLEPROFILE_SERV_UUID,
+//                                           pEvent->deviceInfo.pEvtData,
+//                                           pEvent->deviceInfo.dataLen))
+//          {
+//            SimpleBLECentral_addDeviceInfo(pEvent->deviceInfo.addr,
+//                                           pEvent->deviceInfo.addrType);
+//          }
+//        }
+
+          // if filtering device discovery results based on service UUID
+          if (DEFAULT_DEV_DISC_BY_SVC_UUID == TRUE)
           {
-            SimpleBLECentral_addDeviceInfo(pEvent->deviceInfo.addr,
-                                           pEvent->deviceInfo.addrType);
+            if (SimpleBLECentral_findSvcUuid(SIMPLEPROFILE_SERV_UUID,
+                                             pEvent->deviceInfo.pEvtData,
+                                             pEvent->deviceInfo.dataLen))
+            {
+              SimpleBLECentral_addDeviceInfo(pEvent->deviceInfo.addr,
+                                             pEvent->deviceInfo.addrType);
+
+              {
+                //读广播包或扫描应答包的某个数据段
+                uint8_t ad_type = GAP_ADTYPE_LOCAL_NAME_COMPLETE;     //需要扫描的类型数据
+                uint8_t ad_type_data_index = 0;              //数据段在数据包中的偏移值
+                uint8_t ad_type_data_len = 0;                //数据段的长度
+                static uint8_t get_data[31] = {0};           //数据缓冲区
+                uint8_t *p_get_data = get_data;              //数据缓冲区指针
+                bool status = FALSE;
+
+                status = my_get_ad_type_data( ad_type,
+                                            pEvent->deviceInfo.pEvtData,
+                                            pEvent->deviceInfo.dataLen,
+                                            &ad_type_data_index,
+                                            &ad_type_data_len);
+                if(status == TRUE)
+                {
+                  memcpy(global_get_data, (pEvent->deviceInfo.pEvtData + ad_type_data_index), ad_type_data_len);
+                }
+
+              }
+            }
           }
-        }
       }
       break;
 
@@ -2238,6 +2274,42 @@ static void my_process_periodic_task(void)
 
     }
 
+}
+
+static bool my_get_ad_type_data( uint8_t ad_type, uint8 *p_data, uint8_t data_len, uint8_t *ad_type_data_index, uint8_t *ad_type_data_len)
+{
+  (void)ad_type_data_index;                    //防止编译报错
+  (void)ad_type_data_len;                      //防止编译报错
+
+  uint8_t ad_len;                              //对应数据段的长度
+  uint8_t *p_current;                          //当前位置的指针
+  uint8_t *p_end;                              //尾指针
+
+  p_end = p_data + data_len - 1;               //指向包尾
+
+  p_current = p_data;                         //当前指针指向包头
+
+  while ( p_current < p_end )                             //判断当前指针是否还未到包尾
+  {
+    ad_len = *p_current++;                                //获取本段数据段的长度
+
+    if ( ad_len > 0 )
+    {
+      if ( ad_type == *p_current )                        //如果找到了ad_type
+      {
+        *ad_type_data_index = (p_current + 1) - p_data;   //数据段在数据包中的偏移值
+        *ad_type_data_len = ad_len - 1;                   //数据段长度
+
+        return TRUE;                                      //返回TRUE
+      }
+      else                                                //没找到adType则指向下一个数据段
+      {
+        p_current += ad_len;
+      }
+    }
+  }
+
+  return FALSE;         //本数据串中没有找到ad_type
 }
 /*********************************************************************
 *********************************************************************/
