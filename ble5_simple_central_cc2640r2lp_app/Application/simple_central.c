@@ -704,6 +704,7 @@ static void SimpleBLECentral_init(void)
 
   // My code
   HCI_EXT_SetTxPowerCmd(HCI_EXT_TX_POWER_5_DBM);
+  HCI_EXT_SetRxGainCmd(HCI_EXT_RX_GAIN_HIGH);
 
   my_battery_init();
 
