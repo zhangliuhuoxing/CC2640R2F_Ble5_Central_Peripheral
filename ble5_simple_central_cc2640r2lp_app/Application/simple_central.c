@@ -125,7 +125,7 @@
 #define DEFAULT_SCAN_DURATION                 4000
 
 // Discovery mode (limited, general, all)
-#define DEFAULT_DISCOVERY_MODE                DEVDISC_MODE_ALL
+#define DEFAULT_DISCOVERY_MODE                DEVDISC_MODE_ALL  //DEVDISC_MODE_GENERAL  DEVDISC_MODE_ALL
 
 // TRUE to use active scan
 #define DEFAULT_DISCOVERY_ACTIVE_SCAN         TRUE
@@ -162,7 +162,7 @@
 #define DEFAULT_UPDATE_CONN_TIMEOUT           600
 
 // Default passcode
-#define DEFAULT_PASSCODE                      19655     //19655
+#define DEFAULT_PASSCODE                      123456     //19655
 
 // Default GAP pairing mode
 #define DEFAULT_PAIRING_MODE                  GAPBOND_PAIRING_MODE_WAIT_FOR_REQ
@@ -180,7 +180,7 @@
 #define DEFAULT_SVC_DISCOVERY_DELAY           1000
 
 // TRUE to filter discovery results on desired service UUID
-#define DEFAULT_DEV_DISC_BY_SVC_UUID          TRUE
+#define DEFAULT_DEV_DISC_BY_SVC_UUID          TRUE     //TRUE
 
 // Length of bd addr as a string
 #define B_ADDR_STR_LEN                        15
@@ -355,13 +355,13 @@ static int8_t scanIdx = -1;
 static gapDevRec_t devList[DEFAULT_MAX_SCAN_RES];
 
 // Scanning state
-static bool scanningStarted = FALSE;
+bool scanningStarted = FALSE;
 
 // Connection handle of current connection
 static uint16_t connHandle = GAP_CONNHANDLE_INIT;
 
 // Application state
-static uint8_t state = BLE_STATE_IDLE;
+uint8_t state = BLE_STATE_IDLE;
 
 // Discovery state
 static uint8_t discState = BLE_DISC_STATE_IDLE;
@@ -521,6 +521,41 @@ static void SimpleBLECentral_connectToFirstDevice(void)
 //    Display_clearLine(dispHandle, 4);
 
   }
+}
+
+static int8_t SimpleBLECentral_connectToMyDevice(void)
+{
+//  uint8_t my_device_mac[B_ADDR_LEN] = {0xa9, 0xcc, 0x65, 0x22, 0x91, 0xb0};
+  uint8_t my_device_mac[B_ADDR_LEN] = {0xd3, 0x79, 0x1b, 0x0e, 0x6c, 0x54};
+//  54 6C 0E 1B 79 D3
+  uint8_t addrType;
+  uint8_t *peerAddr;
+  uint8_t i = 0;
+
+  if (state != BLE_STATE_CONNECTED)
+  {
+    if(scanningStarted == FALSE)
+    {
+//        for(uint8_t i = 0; i < scanRes; i++)
+//        {
+//            //当前扫描到的设备mac，与想连接的设备mac相匹配，连接
+//            if(memcmp(my_device_mac, devList[i].addr , B_ADDR_LEN) == 0)
+//            {
+                peerAddr = devList[i].addr;
+                addrType = devList[i].addrType;
+
+                state = BLE_STATE_CONNECTING;
+
+                GAPCentralRole_EstablishLink(DEFAULT_LINK_HIGH_DUTY_CYCLE,
+                                            DEFAULT_LINK_WHITE_LIST,
+                                            addrType, peerAddr);
+                return 0;
+//            }
+//        }
+    }
+  }
+
+  return -1;
 }
 #endif // FPGA_AUTO_CONNECT
 
@@ -984,49 +1019,36 @@ static void SimpleBLECentral_processRoleEvent(gapCentralRoleEvent_t *pEvent)
     case GAP_DEVICE_INFO_EVENT:
       {
         // if filtering device discovery results based on service UUID
-//        if (DEFAULT_DEV_DISC_BY_SVC_UUID == TRUE)
-//        {
-//          if (SimpleBLECentral_findSvcUuid(SIMPLEPROFILE_SERV_UUID,
-//                                           pEvent->deviceInfo.pEvtData,
-//                                           pEvent->deviceInfo.dataLen))
-//          {
-//            SimpleBLECentral_addDeviceInfo(pEvent->deviceInfo.addr,
-//                                           pEvent->deviceInfo.addrType);
-//          }
-//        }
-
-          // if filtering device discovery results based on service UUID
-          if (DEFAULT_DEV_DISC_BY_SVC_UUID == TRUE)
+        if (DEFAULT_DEV_DISC_BY_SVC_UUID == TRUE)
+        {
+          if (SimpleBLECentral_findSvcUuid(SIMPLEPROFILE_SERV_UUID,
+                                           pEvent->deviceInfo.pEvtData,
+                                           pEvent->deviceInfo.dataLen))
           {
-            if (SimpleBLECentral_findSvcUuid(SIMPLEPROFILE_SERV_UUID,
-                                             pEvent->deviceInfo.pEvtData,
-                                             pEvent->deviceInfo.dataLen))
-            {
-              SimpleBLECentral_addDeviceInfo(pEvent->deviceInfo.addr,
-                                             pEvent->deviceInfo.addrType);
-
-              {
-                //读广播包或扫描应答包的某个数据段
-                uint8_t ad_type = GAP_ADTYPE_LOCAL_NAME_COMPLETE;     //需要扫描的类型数据
-                uint8_t ad_type_data_index = 0;              //数据段在数据包中的偏移值
-                uint8_t ad_type_data_len = 0;                //数据段的长度
-                static uint8_t get_data[31] = {0};           //数据缓冲区
-                uint8_t *p_get_data = get_data;              //数据缓冲区指针
-                bool status = FALSE;
-
-                status = my_get_ad_type_data( ad_type,
-                                            pEvent->deviceInfo.pEvtData,
-                                            pEvent->deviceInfo.dataLen,
-                                            &ad_type_data_index,
-                                            &ad_type_data_len);
-                if(status == TRUE)
-                {
-                  memcpy(global_get_data, (pEvent->deviceInfo.pEvtData + ad_type_data_index), ad_type_data_len);
-                }
-
-              }
-            }
+            SimpleBLECentral_addDeviceInfo(pEvent->deviceInfo.addr,
+                                           pEvent->deviceInfo.addrType);
           }
+        }
+
+        {
+          //读广播包或扫描应答包的某个数据段
+          uint8_t ad_type = GAP_ADTYPE_LOCAL_NAME_COMPLETE;     //需要扫描的类型数据
+          uint8_t ad_type_data_index = 0;              //数据段在数据包中的偏移值
+          uint8_t ad_type_data_len = 0;                //数据段的长度
+          static uint8_t get_data[31] = {0};           //数据缓冲区
+          uint8_t *p_get_data = get_data;              //数据缓冲区指针
+          bool status = FALSE;
+
+          status = my_get_ad_type_data( ad_type,
+                                      pEvent->deviceInfo.pEvtData,
+                                      pEvent->deviceInfo.dataLen,
+                                      &ad_type_data_index,
+                                      &ad_type_data_len);
+          if(status == TRUE)
+          {
+            memcpy(&global_get_data[temp_j++], (pEvent->deviceInfo.pEvtData + ad_type_data_index), ad_type_data_len);
+          }
+        }
       }
       break;
 
@@ -1957,6 +1979,7 @@ static void SimpleBLECentral_addDeviceInfo(uint8_t *pAddr, uint8_t addrType)
 
     // Increment scan result count
     scanRes++;
+    temp_i = scanRes;
   }
 }
 
@@ -2144,8 +2167,10 @@ static void my_reconnect_task(void)
         {
             if(scanRes > 0)
             {
-                SimpleBLECentral_connectToFirstDevice();
-                return;
+                if(SimpleBLECentral_connectToMyDevice() == 0)
+                {
+                    return;
+                }
             }
 
             {
