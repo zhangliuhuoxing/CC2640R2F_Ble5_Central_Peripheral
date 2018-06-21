@@ -122,7 +122,7 @@
 #define DEFAULT_MAX_SCAN_RES                  8
 
 // Scan duration in ms
-#define DEFAULT_SCAN_DURATION                 4000
+#define DEFAULT_SCAN_DURATION                 500
 
 // Discovery mode (limited, general, all)
 #define DEFAULT_DISCOVERY_MODE                DEVDISC_MODE_ALL  //DEVDISC_MODE_GENERAL  DEVDISC_MODE_ALL
@@ -131,13 +131,13 @@
 #define DEFAULT_DISCOVERY_ACTIVE_SCAN         TRUE
 
 // TRUE to use white list during discovery
-#define DEFAULT_DISCOVERY_WHITE_LIST          FALSE
+#define DEFAULT_DISCOVERY_WHITE_LIST          FALSE  //FALSE
 
 // TRUE to use high scan duty cycle when creating link
-#define DEFAULT_LINK_HIGH_DUTY_CYCLE          FALSE
+#define DEFAULT_LINK_HIGH_DUTY_CYCLE          FALSE  //FALSE
 
 // TRUE to use white list when creating link
-#define DEFAULT_LINK_WHITE_LIST               FALSE
+#define DEFAULT_LINK_WHITE_LIST               FALSE  //FALSE
 
 // Default RSSI polling period in ms
 #define DEFAULT_RSSI_PERIOD                   10000
@@ -162,13 +162,13 @@
 #define DEFAULT_UPDATE_CONN_TIMEOUT           600
 
 // Default passcode
-#define DEFAULT_PASSCODE                      123456     //19655
+#define DEFAULT_PASSCODE                      19655     //19655 123456
 
 // Default GAP pairing mode
 #define DEFAULT_PAIRING_MODE                  GAPBOND_PAIRING_MODE_WAIT_FOR_REQ
 
 // Default MITM mode (TRUE to require passcode or OOB when pairing)
-#define DEFAULT_MITM_MODE                     FALSE
+#define DEFAULT_MITM_MODE                     TRUE   //FALSE
 
 // Default bonding mode, TRUE to bond
 #define DEFAULT_BONDING_MODE                  TRUE
@@ -244,7 +244,7 @@ My_Task_Data my_task_data =
      .data_update_flag = 0
 };
 
-static uint16_t accelerator_offset_value = 0;
+static uint16_t accelerator_offset_value = 840;
 
 static uint8_t KeyCount = 0;
 static Clock_Struct my_process_periodicClock;
@@ -758,6 +758,7 @@ static void SimpleBLECentral_init(void)
                       MY_RECONNECT_EVT_PERIOD, 0, false,
                       MY_RECONNECT_EVT);
   Util_startClock(&my_reconnect_Clock);
+//  GAPBondMgr_SetParameter(GAPBOND_ERASE_ALLBONDS, 0, NULL);
   // My code
 }
 
@@ -1114,6 +1115,7 @@ static void SimpleBLECentral_processRoleEvent(gapCentralRoleEvent_t *pEvent)
 
           Display_print0(dispHandle, 2, 0, "Connected");
           Display_print0(dispHandle, 3, 0, Util_convertBdAddr2Str(pEvent->linkCmpl.devAddr));
+          Util_startClock(&my_process_periodicClock);
 
       // Display the initial options for a Right key press.
 //          SimpleBLECentral_AutoConnect(0, KEY_LEFT);
@@ -1781,7 +1783,8 @@ static void SimpleBLECentral_processPasscode(uint16_t connectionHandle,
   }
 
   // Send passcode response
-  GAPBondMgr_PasscodeRsp(connectionHandle, SUCCESS, passcode);
+//  GAPBondMgr_PasscodeRsp(connectionHandle, SUCCESS, passcode);
+  GAPBondMgr_PasscodeRsp(connectionHandle, SUCCESS, 123456);
 }
 
 /*********************************************************************
