@@ -222,7 +222,7 @@
 #define MY_ALL_EVENTS               (MY_PROCESS_EVT | MY_RECONNECT_EVT)
 
 #define MY_PROCESS_EVT_PERIOD       5       //5ms
-#define MY_RECONNECT_EVT_PERIOD     6000    //6000ms
+#define MY_RECONNECT_EVT_PERIOD     1000    //6000ms
 
 typedef enum _CONNECT_STATE_ {
     MY_CONNECT = 0,
